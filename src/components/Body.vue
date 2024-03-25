@@ -1,9 +1,14 @@
 <script setup>
 import { ref } from 'vue';
-const ingresos = defineModel();
+const ingresos = ref('');
+const data = [
+    {ingresos: ""},
+]
 
 const ingresosP = () => {
-    return ingresos.value;
+    data.push({ingresos: ingresos.value})
+    ingresos.value = ''
+   
 }
 
 
@@ -17,13 +22,10 @@ const ingresosP = () => {
             <label for="Ingresos">Ingresos</label>
             <input type="text" id="concepto" v-model="ingresos"/>
         </div>
-        <button @click="ingresosP">Agregar</button>
+        <button @submit.prevent="ingresosP">Agregar</button>
     </form>
-    <div>
-        <h2>Ingresos</h2>
-        <ul>
-            <li v-for="ingreso in ingresos">{{ingreso}}</li>
-        </ul>
+    <div v-for="datas in data ">
+       {{datas.ingresos}}
     </div>
 </template>
 <style scoped>
