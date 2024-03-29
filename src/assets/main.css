@@ -1,12 +1,13 @@
 @import "./base.css";
-
+@import "./normalizer.css";
 :root {
   --color-primary: #fff;
   --color-secondary: #42b883;
   --color-tertiary: #0000ff;
+  --color-quaternary: #000;
 }
 #app {
-  max-width: 1280px;
+  max-width: 800px;
   margin: 0 auto;
   font-weight: normal;
 }
@@ -14,12 +15,6 @@ body {
   font-family: "Arial", sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: var(--color-primary);
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    80deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(9, 9, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
+  color: var(--color-quaternary);
+  background-color: whitesmoke;
 }
