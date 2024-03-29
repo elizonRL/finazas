@@ -1,18 +1,16 @@
 <script setup>
 import Moneybag from './icons/Moneybag.vue';
+import Plus from './icons/Plus.vue';
 import { ref } from 'vue';
 const ingresos = ref('');
 const data = ref([]);
 
 const ingresosP = () => {
-    if(ingresos.value === '') return alert('Debes agregar un ingreso')
-    
+    if (ingresos.value === '') return alert('Debes agregar un ingreso')
+
     data.value.push({ ingreso: ingresos.value })
     ingresos.value = ''
-    
-
 }
-
 
 </script>
 <template>
@@ -31,15 +29,23 @@ const ingresosP = () => {
             </form>
 
         </article>
-        <div  v-if="data.length !== 0">
-            <h2>Mis ingresos</h2>
-            <p v-for="datas in data ">{{ datas.ingreso }}</p>
-        </div>
+        <article>
+            <div v-if="data.length === 0">
+                <p>No hay ingresos</p>
+            </div>
+            <a href="">
+                <Plus/>
+            </a>
+            <div v-if="data.length !== 0">
+                <h2>Mis ingresos</h2>
+                <p v-for="datas in data ">{{ datas.ingreso }}</p>
+            </div>
+        </article>
     </section>
 </template>
 <style scoped>
 article {
-    margin:  auto;
+    margin: auto;
     padding: 1rem;
     border: 1px solid #ccc;
     border-radius: 0.25rem;
@@ -53,6 +59,7 @@ article {
 form {
     margin: 1rem auto;
 }
+
 .header_finanza {
     display: flex;
     align-items: center;
