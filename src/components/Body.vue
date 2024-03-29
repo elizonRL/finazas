@@ -5,6 +5,8 @@ const ingresos = ref('');
 const data = ref([]);
 
 const ingresosP = () => {
+    if(ingresos.value === '') return alert('Debes agregar un ingreso')
+    
     data.value.push({ ingreso: ingresos.value })
     ingresos.value = ''
     
