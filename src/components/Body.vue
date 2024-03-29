@@ -33,12 +33,14 @@ const ingresosP = () => {
             <div v-if="data.length === 0">
                 <p>No hay ingresos</p>
             </div>
-            <a href="">
+            
+            <div v-else  v-for="datas in data ">
+                <h2>Mis ingresos</h2>
+                <a href="">
                 <Plus/>
             </a>
-            <div v-if="data.length !== 0">
-                <h2>Mis ingresos</h2>
-                <p v-for="datas in data ">{{ datas.ingreso }}</p>
+                <span>Mis ingresos</span>
+                <p >{{ datas.ingreso }}</p>
             </div>
         </article>
     </section>
