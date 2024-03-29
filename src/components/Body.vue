@@ -2,11 +2,11 @@
 import { ref } from 'vue';
 const ingresos = ref('');
 const data = [
-    {ingresos: ""},
+    {ingreso: ""},
 ]
 
 const ingresosP = () => {
-    data.push({ingresos: ingresos.value})
+    data.push({ingreso: ingresos.value})
     ingresos.value = ''
    
 }
@@ -17,7 +17,7 @@ const ingresosP = () => {
     <h1>Finazas personales</h1>
     <span>Crea tu control de finazas</span>
 
-    <form>
+    <form >
         <div>
             <label for="Ingresos">Ingresos</label>
             <input type="text" id="concepto" v-model="ingresos"/>
@@ -25,7 +25,7 @@ const ingresosP = () => {
         <button @submit.prevent="ingresosP">Agregar</button>
     </form>
     <div v-for="datas in data ">
-       {{datas.ingresos}}
+        <p>{{datas.ingreso}}</p>
     </div>
 </template>
 <style scoped>
