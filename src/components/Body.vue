@@ -16,8 +16,7 @@ const ingresosP = () => {
 <template>
     <section>
         <div class="header_finanza">
-            <Moneybag />
-            <h1>Finazas personales</h1>
+            <h1>Agrega Tus Finanzas</h1>
         </div>
         <article>
             <form @submit.prevent="ingresosP">
@@ -25,29 +24,41 @@ const ingresosP = () => {
                     <label for="Ingresos">Ingresos</label>
                     <input type="text" id="concepto" v-model="ingresos" />
                 </div>
-                <button>Agregar</button>
+                <button>Agregar Ingresos</button>
+                <div class="gastos-grup">
+                    <div class="montos">
+                    <label for="gasto">Nombre del Gasto</label>
+                    <input type="text" id="gasto" />
+                </div>
+                    <div class="montos">
+                        <label for="monto">Monto</label>
+                        <input type="text" id="monto" />
+                    </div>
+                    
+                </div>
+                <button @click="">Agregar Gastos</button>
             </form>
 
         </article>
-        <article>
+        <div class="card-ingresos">
             <div v-if="data.length === 0">
-                <p>No hay ingresos</p>
+                <h1>No hay ingresos</h1>
             </div>
-            
-            <div v-else  v-for="datas in data ">
+
+            <div v-else v-for="datas in data ">
                 <h2>Mis ingresos</h2>
                 <a href="">
-                <Plus/>
-            </a>
+                    <Plus />
+                </a>
                 <span>Mis ingresos</span>
-                <p >{{ datas.ingreso }}</p>
+                <p>{{ datas.ingreso }}</p>
             </div>
-        </article>
+        </div>
     </section>
 </template>
 <style scoped>
 article {
-    margin: auto;
+    margin: 50px auto;
     padding: 1rem;
     border: 1px solid #ccc;
     border-radius: 0.25rem;
@@ -60,6 +71,12 @@ article {
 
 form {
     margin: 1rem auto;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 44px;
+    font-weight: 700;
 }
 
 .header_finanza {
@@ -67,6 +84,16 @@ form {
     align-items: center;
     justify-content: center;
     margin: 2rem auto;
+}
+.card-ingresos {
+    margin: 2rem auto;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    width: 50%;
+    text-align: center;
+    box-shadow: 0, 5px, 20px rgba(0, 0, 2, 0.2);
+    background: #fff;
 }
 
 button {
@@ -97,4 +124,40 @@ label {
     margin: 1rem 0;
     font-size: 25px;
 }
+.gastos-grup {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.gastos-grup input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+    height: 30px;
+    justify-content: center;
+}
+.gastos-grup label {
+    font-weight: bold;
+    display: block;
+    margin: 1rem 0;
+    font-size: 25px;
+}
+.montos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 5px;
+}
+
+.montos label {
+    font-weight: bold;
+    display: block;
+    margin: 1rem 0;
+    font-size: 25px;
+}
+
 </style>
