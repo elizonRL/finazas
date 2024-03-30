@@ -1,20 +1,28 @@
 <script setup>
-import Moneybag from './icons/Moneybag.vue';
+import Modal from './Modal.vue';
 import Plus from './icons/Plus.vue';
 import { ref } from 'vue';
 const ingresos = ref('');
 const data = ref([]);
+const modal = ref(false);
 
 const ingresosP = () => {
     if (ingresos.value === '') return alert('Debes agregar un ingreso')
 
-    data.value.push({ ingreso: ingresos.value })
+    data.value.push({ ingreso: ingresos.value, id: data.value.length + 1 })
     ingresos.value = ''
+
 }
+const openModal = () => {
+    modal.value = !modal.value;
+}
+
 
 </script>
 <template>
     <section>
+        <Modal v-show="modal" @close="openModal" />
+
         <div class="header_finanza">
             <h1>Agrega Tus Finanzas</h1>
         </div>
@@ -24,19 +32,7 @@ const ingresosP = () => {
                     <label for="Ingresos">Ingresos</label>
                     <input type="text" id="concepto" v-model="ingresos" />
                 </div>
-                <button>Agregar Ingresos</button>
-                <div class="gastos-grup">
-                    <div class="montos">
-                    <label for="gasto">Nombre del Gasto</label>
-                    <input type="text" id="gasto" />
-                </div>
-                    <div class="montos">
-                        <label for="monto">Monto</label>
-                        <input type="text" id="monto" />
-                    </div>
-                    
-                </div>
-                <button @click="">Agregar Gastos</button>
+                <button>Agregar</button>
             </form>
 
         </article>
@@ -45,15 +41,20 @@ const ingresosP = () => {
                 <h1>No hay ingresos</h1>
             </div>
 
-            <div v-else v-for="datas in data ">
-                <h2>Mis ingresos</h2>
-                <a href="">
-                    <Plus />
-                </a>
-                <span>Mis ingresos</span>
-                <p>{{ datas.ingreso }}</p>
+            <div v-else>
+                <div class="ingresos-header">
+                    <h2>Mis ingresos</h2>
+                    <span @click="openModal">
+                        <Plus />
+                    </span>
+                </div>
+                
+                <p v-for="datas in data " :key="datas.id">{{ datas.ingreso }} - {{ datas.id }}</p>
             </div>
         </div>
+        <button @click="openModal">
+            <Plus />
+        </button>
     </section>
 </template>
 <style scoped>
@@ -85,6 +86,7 @@ h1 {
     justify-content: center;
     margin: 2rem auto;
 }
+
 .card-ingresos {
     margin: 2rem auto;
     padding: 1rem;
@@ -124,40 +126,14 @@ label {
     margin: 1rem 0;
     font-size: 25px;
 }
-.gastos-grup {
+.ingresos-header {
     display: flex;
-    text-align: center;
-    align-items: center;
     justify-content: space-between;
-    width: 100%;
-}
-.gastos-grup input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px;
-    height: 30px;
-    justify-content: center;
-}
-.gastos-grup label {
-    font-weight: bold;
-    display: block;
-    margin: 1rem 0;
-    font-size: 25px;
-}
-.montos {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    width: 100%;
-    margin: 5px;
 }
-
-.montos label {
-    font-weight: bold;
-    display: block;
-    margin: 1rem 0;
+h2 {
     font-size: 25px;
+    font-weight: 700;
+    text-align: center;
 }
-
 </style>
