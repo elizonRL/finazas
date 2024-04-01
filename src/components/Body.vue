@@ -1,18 +1,29 @@
 <script setup>
 import Modal from './Modal.vue';
 import Plus from './icons/Plus.vue';
+import Trash from './icons/Trash.vue';
+import Pencil from './icons/Pencil.vue';
 import { ref } from 'vue';
 const ingresos = ref('');
 const data = ref([]);
 const modal = ref(false);
 
-const ingresosP = () => {
+const addIngresos = () => {
     if (ingresos.value === '') return alert('Debes agregar un ingreso')
 
     data.value.push({ ingreso: ingresos.value, id: data.value.length + 1 })
     ingresos.value = ''
 
 }
+
+const removeIngresos = (id) => {
+    data.value = data.value.filter((datas) => datas.id !== id)
+}
+
+/* const editIngresos = (id) => {
+   const ingreso = data.value.find((datas) => datas.id === id)
+    ingresos.value = ingreso.ingreso
+} */
 const openModal = () => {
     modal.value = !modal.value;
 }
@@ -27,7 +38,7 @@ const openModal = () => {
             <h1>Agrega Tus Finanzas</h1>
         </div>
         <article>
-            <form @submit.prevent="ingresosP">
+            <form @submit.prevent="addIngresos">
                 <div>
                     <label for="Ingresos">Ingresos</label>
                     <input type="text" id="concepto" v-model="ingresos" />
@@ -45,16 +56,19 @@ const openModal = () => {
                 <div class="ingresos-header">
                     <h2>Mis ingresos</h2>
                     <span @click="openModal">
+                        agregar gastos
                         <Plus />
                     </span>
                 </div>
-                
-                <p v-for="datas in data " :key="datas.id">{{ datas.ingreso }} - {{ datas.id }}</p>
+                <div v-for="datas in data" :key="datas.id">
+                    <div>
+                        <h3>{{ datas.ingreso }}</h3>
+                        <Trash @click="removeIngresos(datas.id)"/>
+                       <Pencil @click="editIngresos(datas.id)"/>
+                    </div>
+                </div>
             </div>
         </div>
-        <button @click="openModal">
-            <Plus />
-        </button>
     </section>
 </template>
 <style scoped>
@@ -126,11 +140,13 @@ label {
     margin: 1rem 0;
     font-size: 25px;
 }
+
 .ingresos-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
 h2 {
     font-size: 25px;
     font-weight: 700;
