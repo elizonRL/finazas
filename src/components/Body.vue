@@ -4,20 +4,32 @@ import Plus from './icons/Plus.vue';
 import Trash from './icons/Trash.vue';
 import Pencil from './icons/Pencil.vue';
 import { ref } from 'vue';
+
+
 const ingresos = ref('');
+const month = ref('');
 const data = ref([]);
 const modal = ref(false);
 
-const addIngresos = () => {
-    if (ingresos.value === '') return alert('Debes agregar un ingreso')
+const monthOnly = month.value =new Date(month.value).toLocaleDateString( 'es-ES', { month: 'long' });
 
-    data.value.push({ ingreso: ingresos.value, id: data.value.length + 1 })
-    ingresos.value = ''
+
+const addIngresos = () => {
+  if (ingresos.value =='' || month.value === '') return alert('Debes agregar un ingreso')
+
+  console.log(month.value);
+  data.value.push({
+    ingreso: ingresos.value,
+    id: data.value.length + 1,
+    month: month.value = new Date(month.value).toLocaleDateString( 'es-ES', { month: 'long', year: 'numeric' }) 
+  })
+  ingresos.value = '';
+  month.value = '';
 
 }
 
 const removeIngresos = (id) => {
-    data.value = data.value.filter((datas) => datas.id !== id)
+  data.value = data.value.filter((datas) => datas.id !== id)
 }
 
 /* const editIngresos = (id) => {
@@ -25,131 +37,199 @@ const removeIngresos = (id) => {
     ingresos.value = ingreso.ingreso
 } */
 const openModal = () => {
-    modal.value = !modal.value;
+  modal.value = !modal.value;
 }
 
 
 </script>
 <template>
-    <section>
-        <Modal v-show="modal" @close="openModal" />
+  <section>
+    <Modal v-show="modal" @close="openModal" />
 
-        <div class="header_finanza">
-            <h1>Agrega Tus Finanzas</h1>
+    <div class="header_finanza">
+      <h1>Agrega Tus Finanzas</h1>
+    </div>
+    <article>
+      <form @submit.prevent="addIngresos">
+        <div class="date">
+          <label for="fecha">Mes:</label>
+          <input type="month" id="fecha" v-model="month" />
         </div>
-        <article>
-            <form @submit.prevent="addIngresos">
-                <div>
-                    <label for="Ingresos">Ingresos</label>
-                    <input type="text" id="concepto" v-model="ingresos" />
-                </div>
-                <button>Agregar</button>
-            </form>
-
-        </article>
-        <div class="card-ingresos">
-            <div v-if="data.length === 0">
-                <h1>No hay ingresos</h1>
-            </div>
-
-            <div v-else>
-                <div class="ingresos-header">
-                    <h2>Mis ingresos</h2>
-                    <span @click="openModal">
-                        agregar gastos
-                        <Plus />
-                    </span>
-                </div>
-                <div v-for="datas in data" :key="datas.id">
-                    <div>
-                        <h3>{{ datas.ingreso }}</h3>
-                        <Trash @click="removeIngresos(datas.id)"/>
-                       <Pencil @click="editIngresos(datas.id)"/>
-                    </div>
-                </div>
-            </div>
+        <div>
+          <label for="Ingresos">Ingresos</label>
+          <input type="text" id="concepto" v-model="ingresos" />
         </div>
-    </section>
+        <button>Agregar</button>
+      </form>
+
+    </article>
+    <div class="card-ingresos">
+      <div v-if="data.length === 0">
+        <h1>No hay ingresos</h1>
+      </div>
+
+      <div v-else>
+        <div class="ingresos-header">
+          <h2>Mis ingresos</h2>
+
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Mes</th>
+              <th>Ingreso</th>
+              <th>Porcentaje Gastado</th>
+              <th>Editar Ingreso</th>
+              <th>Eliminar Ingreso</th>
+              <th>Agregar gastos</th>
+            </tr>
+          </thead>
+          <tbody v-for="datas in data" :key="datas.id">
+            <tr>
+              <td>{{ datas.month }}</td>
+              <td>{{ datas.ingreso }}</td>
+              <td>
+                %gastado
+              </td>
+              <td>
+                <Pencil @click="editIngresos(datas.id)" />
+              </td>
+              <td>
+                <Trash @click="removeIngresos(datas.id)" />
+              </td>
+              <td>
+                <Plus @click="openModal" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+  </section>
 </template>
 <style scoped>
 article {
-    margin: 50px auto;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-    width: 50%;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0, 5px, 20px rgba(0, 0, 2, 0.2);
-    background: #fff;
+  margin: 50px auto;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  width: 50%;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0, 5px, 20px rgba(0, 0, 2, 0.2);
+  background: #fff;
+}
+
+.date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date input {
+  margin: 0 1rem;
+  border: none;
+}
+
+.date input:focus {
+  border: none;
 }
 
 form {
-    margin: 1rem auto;
-    justify-content: center;
+  margin: 1rem auto;
+  justify-content: center;
 }
 
 h1 {
-    font-size: 44px;
-    font-weight: 700;
+  font-size: 44px;
+  font-weight: 700;
 }
 
 .header_finanza {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 2rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem auto;
 }
 
 .card-ingresos {
-    margin: 2rem auto;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-    width: 50%;
-    text-align: center;
-    box-shadow: 0, 5px, 20px rgba(0, 0, 2, 0.2);
-    background: #fff;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0, 5px, 20px rgba(0, 0, 2, 0.2);
+  background: #fff;
 }
 
 button {
-    padding: 0.5rem 1rem;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
+  padding: 0.5rem 1rem;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
 }
 
 button:hover {
-    background-color: var(--color-secondary);
+  background-color: var(--color-secondary);
 }
 
 input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px;
-    border: 2px solid rgba(103, 224, 158, 0.5);
-    border-radius: 0.25rem;
-    background: transparent;
+  width: 100%;
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid rgba(103, 224, 158, 0.5);
+  border-radius: 0.25rem;
+  background: transparent;
 }
 
 label {
-    font-weight: bold;
-    display: block;
-    margin: 1rem 0;
-    font-size: 25px;
+  font-weight: bold;
+  display: block;
+  margin: 1rem 0;
+  font-size: 25px;
 }
 
 .ingresos-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 
 h2 {
-    font-size: 25px;
-    font-weight: 700;
-    text-align: center;
+  font-size: 44px;
+  font-weight: 700;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem auto;
+}
+
+thead {
+  background: #333;
+  color: white;
+}
+
+th,
+td {
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+input[type="month"] {
+  width: 100%;
+}
+
+input[type="month"]:focus {
+  outline: none;
 }
 </style>
