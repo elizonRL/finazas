@@ -11,22 +11,35 @@ const month = ref('');
 const data = ref([]);
 const modal = ref(false);
 
-const monthOnly = month.value =new Date(month.value).toLocaleDateString( 'es-ES', { month: 'long' });
-
+const date = (month) => {
+  return new Date(month.value).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+}
 
 const addIngresos = () => {
-  if (ingresos.value =='' || month.value === '') return alert('Debes agregar un ingreso')
+  let nuewValue = parseFloat(ingresos.value);
+  let namComprobation = isNaN(nuewValue);
+  console.log(namComprobation);
+  if (ingresos.value == '' || month.value === '') return alert('Debes Completar los campos')
+  if (namComprobation) return alert('Debes agregar un numero')
 
   console.log(month.value);
   data.value.push({
-    ingreso: ingresos.value,
+    ingreso: nuewValue,
     id: data.value.length + 1,
-    month: month.value = new Date(month.value).toLocaleDateString( 'es-ES', { month: 'long', year: 'numeric' }) 
+    month: date(month),
+    
   })
   ingresos.value = '';
   month.value = '';
-
+  PorcentajeGastado()
 }
+
+/* const PorcentajeGastado = (id) => {
+  const gastosPorcentaje = data.value.filter((datas) => datas.id === id)
+  const porcentaje = (gastosPorcentaje * 100) / 1000;
+  console.log(porcentaje);
+  return porcentaje;
+} */
 
 const removeIngresos = (id) => {
   data.value = data.value.filter((datas) => datas.id !== id)
@@ -88,9 +101,9 @@ const openModal = () => {
           <tbody v-for="datas in data" :key="datas.id">
             <tr>
               <td>{{ datas.month }}</td>
-              <td>{{ datas.ingreso }}</td>
+              <td>$ {{ datas.ingreso }}</td>
               <td>
-                %gastado
+                {{ datas.porcentaje}}
               </td>
               <td>
                 <Pencil @click="editIngresos(datas.id)" />
