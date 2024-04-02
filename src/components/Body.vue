@@ -47,13 +47,16 @@ const PorcentajeGastado = (id) => {
   return porcentaje;
 }
 
-const removeIngresos = (id) => {
-  data.value = data.value.filter((datas) => datas.id !== id)
+const removeIngresos = async (id) => {
+  const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
+  fetchTodos()
 }
 
-/* const editIngresos = (id) => {
-   const ingreso = data.value.find((datas) => datas.id === id)
-    ingresos.value = ingreso.ingreso
+/* const editIngresos = async (id) => {
+  const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
+    ingreso: ingresos.value,
+    month: month.value
+  })
 } */
 const openModal = () => {
   modal.value = !modal.value;
