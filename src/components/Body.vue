@@ -4,6 +4,7 @@ import Plus from './icons/Plus.vue';
 import Trash from './icons/Trash.vue';
 import Pencil from './icons/Pencil.vue';
 import { ref } from 'vue';
+import axios from 'axios';
 
 
 const ingresos = ref('');
@@ -14,8 +15,14 @@ const modal = ref(false);
 const date = (month) => {
   return new Date(month.value).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
 }
+const fetchTodos = async () => {
+  const res = await axios.get('http://localhost:8080/finanzas')
+  data.value = res.data
+}
+fetchTodos()
 
-const addIngresos = () => {
+const addIngresos = async () => {
+ 
   let nuewValue = parseFloat(ingresos.value);
   let namComprobation = isNaN(nuewValue);
   console.log(namComprobation);
@@ -23,23 +30,22 @@ const addIngresos = () => {
   if (namComprobation) return alert('Debes agregar un numero')
 
   console.log(month.value);
-  data.value.push({
+  const res = await axios.post('http://localhost:8080/finanzas', {
     ingreso: nuewValue,
-    id: data.value.length + 1,
-    month: date(month),
-    
+    month: date(month)
   })
+   data.value.push(res.data)
   ingresos.value = '';
   month.value = '';
   PorcentajeGastado()
 }
 
-/* const PorcentajeGastado = (id) => {
+const PorcentajeGastado = (id) => {
   const gastosPorcentaje = data.value.filter((datas) => datas.id === id)
   const porcentaje = (gastosPorcentaje * 100) / 1000;
   console.log(porcentaje);
   return porcentaje;
-} */
+}
 
 const removeIngresos = (id) => {
   data.value = data.value.filter((datas) => datas.id !== id)
