@@ -32,18 +32,20 @@ const addIngresos = async () => {
   console.log(month.value);
   const res = await axios.post('http://localhost:8080/finanzas', {
     ingreso: nuewValue,
-    month: date(month)
+    month: date(month),
+    gastos: [],
+    porcentaje: PorcentajeGastado()
   })
    data.value.push(res.data)
   ingresos.value = '';
   month.value = '';
-  PorcentajeGastado()
 }
 
-const PorcentajeGastado = (id) => {
-  const gastosPorcentaje = data.value.filter((datas) => datas.id === id)
-  const porcentaje = (gastosPorcentaje * 100) / 1000;
-  console.log(porcentaje);
+const PorcentajeGastado = () => {
+  const gastosPorcentaje = data.value.map((gasto) => gasto.gastos)
+  const porcentaje = 0;
+  if (gastosPorcentaje.length === 0) return porcentaje;
+  
   return porcentaje;
 }
 
@@ -61,12 +63,24 @@ const removeIngresos = async (id) => {
 const openModal = () => {
   modal.value = !modal.value;
 }
-
-
 </script>
 <template>
   <section>
-    <Modal v-show="modal" @close="openModal" />
+    <Modal v-show="modal" @close="openModal" >
+      <template #header>
+        <h1>Agrega tus gastos</h1>
+      </template>
+      <template #body>
+          <div class="montos">
+            <label for="monto">Monto</label>
+            <input type="text" id="monto" />
+          </div>
+          <div class="montos">
+            <label for="concepto">Concepto</label>
+            <input type="text" id="concepto" />
+          </div>
+      </template>
+    </Modal>
 
     <div class="header_finanza">
       <h1>Agrega Tus Finanzas</h1>
@@ -112,7 +126,7 @@ const openModal = () => {
               <td>{{ datas.month }}</td>
               <td>$ {{ datas.ingreso }}</td>
               <td>
-                {{ datas.porcentaje}}
+                {{ datas.porcentaje}} %
               </td>
               <td>
                 <Pencil @click="editIngresos(datas.id)" />
@@ -253,5 +267,20 @@ input[type="month"] {
 
 input[type="month"]:focus {
   outline: none;
+}
+.montos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 5px;
+}
+
+.montos label {
+    font-weight: bold;
+    display: block;
+    margin: 1rem 0;
+    font-size: 25px;
 }
 </style>
