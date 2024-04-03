@@ -1,69 +1,4 @@
-<script setup>
-import Modal from './Modal.vue';
-import Plus from './icons/Plus.vue';
-import Trash from './icons/Trash.vue';
-import Pencil from './icons/Pencil.vue';
-import { ref } from 'vue';
-import axios from 'axios';
 
-
-const ingresos = ref('');
-const month = ref('');
-const data = ref([]);
-const modal = ref(false);
-
-const date = (month) => {
-  return new Date(month.value).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
-}
-const fetchTodos = async () => {
-  const res = await axios.get('http://localhost:8080/finanzas')
-  data.value = res.data
-}
-fetchTodos()
-
-const addIngresos = async () => {
- 
-  let nuewValue = parseFloat(ingresos.value);
-  let namComprobation = isNaN(nuewValue);
-  console.log(namComprobation);
-  if (ingresos.value == '' || month.value === '') return alert('Debes Completar los campos')
-  if (namComprobation) return alert('Debes agregar un numero')
-
-  console.log(month.value);
-  const res = await axios.post('http://localhost:8080/finanzas', {
-    ingreso: nuewValue,
-    month: date(month),
-    gastos: [],
-    porcentaje: PorcentajeGastado()
-  })
-   data.value.push(res.data)
-  ingresos.value = '';
-  month.value = '';
-}
-
-const PorcentajeGastado = () => {
-  const gastosPorcentaje = data.value.map((gasto) => gasto.gastos)
-  const porcentaje = 0;
-  if (gastosPorcentaje.length === 0) return porcentaje;
-  
-  return porcentaje;
-}
-
-const removeIngresos = async (id) => {
-  const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
-  fetchTodos()
-}
-
-/* const editIngresos = async (id) => {
-  const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
-    ingreso: ingresos.value,
-    month: month.value
-  })
-} */
-const openModal = () => {
-  modal.value = !modal.value;
-}
-</script>
 <template>
   <section>
     <Modal v-show="modal" @close="openModal" >
@@ -146,6 +81,73 @@ const openModal = () => {
 
   </section>
 </template>
+<script setup>
+import Modal from './Modal.vue';
+import Plus from './icons/Plus.vue';
+import Trash from './icons/Trash.vue';
+import Pencil from './icons/Pencil.vue';
+import { ref } from 'vue';
+import axios from 'axios';
+
+
+const ingresos = ref('');
+const month = ref('');
+const data = ref([]);
+const modal = ref(false);
+
+const date = (month) => {
+  return new Date(month.value).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+}
+const fetchTodos = async () => {
+  const res = await axios.get('http://localhost:8080/finanzas')
+  data.value = res.data
+}
+fetchTodos()
+
+const addIngresos = async () => {
+ 
+  let nuewValue = parseFloat(ingresos.value);
+  let namComprobation = isNaN(nuewValue);
+  console.log(namComprobation);
+  if (ingresos.value == '' || month.value === '') return alert('Debes Completar los campos')
+  if (namComprobation) return alert('Debes agregar un numero')
+
+  console.log(month.value);
+  const res = await axios.post('http://localhost:8080/finanzas', {
+    ingreso: nuewValue,
+    month: date(month),
+    gastos: [],
+    porcentaje: PorcentajeGastado()
+  })
+   data.value.push(res.data)
+  ingresos.value = '';
+  month.value = '';
+}
+
+const PorcentajeGastado = () => {
+  const gastosPorcentaje = data.value.map((gasto) => gasto.gastos)
+  const porcentaje = 0;
+  if (gastosPorcentaje.length === 0) return porcentaje;
+  
+  return porcentaje;
+}
+
+const removeIngresos = async (id) => {
+  const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
+  fetchTodos()
+}
+
+/* const editIngresos = async (id) => {
+  const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
+    ingreso: ingresos.value,
+    month: month.value
+  })
+} */
+const openModal = () => {
+  modal.value = !modal.value;
+}
+
+</script>
 <style scoped>
 article {
   margin: 50px auto;
