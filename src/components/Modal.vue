@@ -1,30 +1,52 @@
 <template>
-    <div class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close" @click="close">&times;</span>
-                <slot name="header" />
-            </div>
-            <div class="modal-body">
-                <div class="gastos-grup">
-                    <slot name="body" />
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button @click="close" class="closed">close</button>
-                <button class="save">Save</button>
-            </div>
+    <div ref="modal" v-show="show" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <slot name="header" />
         </div>
+        <div class="modal-body">
+          <slot name="conten" />
+        </div>
+        <div class="modal-footer">
+          <slot name="footer" />
+        </div>
+      </div>
     </div>
-
-
-</template>
-<script setup>
-const emit = defineEmits(['close'])
-const close = () => {
-    emit('close')
-}
-</script>
+  </template>
+  
+  <script setup>
+  import { onBeforeUnmount, onMounted, ref } from 'vue';
+  
+  defineProps({
+    show: {
+        default: false,
+      },
+  })
+  const modal = ref(null);
+  
+  const emit = defineEmits(['close']);
+  
+  const clickListener = (e) => {
+          if (e.target === modal.value) {
+            emit("close");
+          }
+        }
+  
+  const keydown = (e) => {
+          if (e.key === "Escape") {
+            emit("close");
+          }
+        }
+  onMounted(()=>{
+    window.addEventListener("click", clickListener);
+    window.addEventListener("keydown", keydown); 
+  });
+  onBeforeUnmount(()=>{
+    window.removeEventListener("click", clickListener);
+    window.removeEventListener("keydown", keydown);
+  });
+  </script>
 
 <style scoped>
 /* Modal Header */

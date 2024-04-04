@@ -1,19 +1,22 @@
-
 <template>
   <section>
-    <Modal v-show="modal" @close="openModal" >
+    <Modal :show="showAddGastos.show" @close="showAddGastos.show = flase">
       <template #header>
         <h1>Agrega tus gastos</h1>
       </template>
-      <template #body>
-          <div class="montos">
-            <label for="monto">Monto</label>
-            <input type="text" id="monto" />
-          </div>
-          <div class="montos">
-            <label for="concepto">Concepto</label>
-            <input type="text" id="concepto" />
-          </div>
+      <template #conten>
+        <div class="montos">
+          <label for="monto">Monto</label>
+          <input type="text" id="monto" />
+        </div>
+        <div class="montos">
+          <label for="concepto">Concepto</label>
+          <input type="text" id="concepto" />
+        </div>
+      </template>
+      <template #footer>
+        <button @click="updateGastos(showAddGastos.data.id)">Agregar</button>
+        <button @click="showAddGastos.show = false">Close</button>
       </template>
     </Modal>
 
@@ -21,18 +24,7 @@
       <h1>Agrega Tus Finanzas</h1>
     </div>
     <article>
-      <form @submit.prevent="addIngresos">
-        <div class="date">
-          <label for="fecha">Mes:</label>
-          <input type="month" id="fecha" v-model="month" />
-        </div>
-        <div>
-          <label for="Ingresos">Ingresos</label>
-          <input type="text" id="concepto" v-model="ingresos" />
-        </div>
-        <button>Agregar</button>
-      </form>
-
+      <FormIngresos @submit="addIngresos" />
     </article>
     <div class="card-ingresos">
       <div v-if="data.length === 0">
@@ -61,7 +53,7 @@
               <td>{{ datas.month }}</td>
               <td>$ {{ datas.ingreso }}</td>
               <td>
-                {{ datas.porcentaje}} %
+                {{ datas.porcentaje }} %
               </td>
               <td>
                 <Pencil @click="editIngresos(datas.id)" />
@@ -70,7 +62,7 @@
                 <Trash @click="removeIngresos(datas.id)" />
               </td>
               <td>
-                <Plus @click="openModal" />
+                <Plus @click="openModal(datas)" />
               </td>
             </tr>
           </tbody>
@@ -82,69 +74,92 @@
   </section>
 </template>
 <script setup>
+//Importamos los componentes
 import Modal from './Modal.vue';
 import Plus from './icons/Plus.vue';
 import Trash from './icons/Trash.vue';
 import Pencil from './icons/Pencil.vue';
 import { ref } from 'vue';
 import axios from 'axios';
-
-
-const ingresos = ref('');
-const month = ref('');
+import FormIngresos from './FormIngresos.vue';
+//Variables reactivas
 const data = ref([]);
-const modal = ref(false);
+const showAddGastos = ref({
+  show: false,
+  data: {
+    id: '',
+    gastos: '',
+    month: '',
+    gastos: [],
+    porcentaje: 0
+  }
+});
 
-const date = (month) => {
-  return new Date(month.value).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
-}
+//Funciones
+//Funcion para traer los datos de la base de datos
 const fetchTodos = async () => {
   const res = await axios.get('http://localhost:8080/finanzas')
   data.value = res.data
 }
+//Llamamos la funcion para traer los datos
 fetchTodos()
-
-const addIngresos = async () => {
- 
-  let nuewValue = parseFloat(ingresos.value);
+//Funcion para agregar los ingresos
+const addIngresos = async (ingresos, month) => {
+  //Validamos que los campos no esten vacios
+  let nuewValue = parseFloat(ingresos);
   let namComprobation = isNaN(nuewValue);
-  console.log(namComprobation);
+  //Validamos que los campos no esten vacios
   if (ingresos.value == '' || month.value === '') return alert('Debes Completar los campos')
   if (namComprobation) return alert('Debes agregar un numero')
 
-  console.log(month.value);
+  //Hacemos la peticion a la base de datos
   const res = await axios.post('http://localhost:8080/finanzas', {
     ingreso: nuewValue,
     month: date(month),
     gastos: [],
     porcentaje: PorcentajeGastado()
   })
-   data.value.push(res.data)
-  ingresos.value = '';
-  month.value = '';
+  data.value.push(res.data)
+
+}
+//Funcion para dar formato a la fecha
+const date = (month) => {
+  return new Date(month).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
 }
 
+//Funcion para calcular el porcentaje gastado
 const PorcentajeGastado = () => {
   const gastosPorcentaje = data.value.map((gasto) => gasto.gastos)
   const porcentaje = 0;
   if (gastosPorcentaje.length === 0) return porcentaje;
-  
+
   return porcentaje;
 }
 
+//Funcion para eliminar los ingresos
 const removeIngresos = async (id) => {
   const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
   fetchTodos()
 }
-
-/* const editIngresos = async (id) => {
+//Funcion para editar los ingresos
+const editIngresos = async (id) => {
   const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
     ingreso: ingresos.value,
     month: month.value
-  })
-} */
-const openModal = () => {
-  modal.value = !modal.value;
+  });
+  fetchTodos()
+}
+//Funcion para abrir el modal
+const openModal = (datas) => {
+  showAddGastos.show = true;
+  showAddGastos.data = { ...datas }
+  console.log(showAddGastos.data , 'data', showAddGastos.show)
+}
+const updateGastos = async (id) => {
+  const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
+    gastos: gastos.value
+  });
+  fetchTodos()
 }
 
 </script>
@@ -159,26 +174,6 @@ article {
   text-align: center;
   box-shadow: 0, 5px, 20px rgba(0, 0, 2, 0.2);
   background: #fff;
-}
-
-.date {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.date input {
-  margin: 0 1rem;
-  border: none;
-}
-
-.date input:focus {
-  border: none;
-}
-
-form {
-  margin: 1rem auto;
-  justify-content: center;
 }
 
 h1 {
@@ -217,21 +212,7 @@ button:hover {
   background-color: var(--color-secondary);
 }
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px;
-  border: 2px solid rgba(103, 224, 158, 0.5);
-  border-radius: 0.25rem;
-  background: transparent;
-}
 
-label {
-  font-weight: bold;
-  display: block;
-  margin: 1rem 0;
-  font-size: 25px;
-}
 
 .ingresos-header {
   display: flex;
@@ -263,26 +244,19 @@ td {
   border-bottom: 1px solid #ccc;
 }
 
-input[type="month"] {
-  width: 100%;
-}
-
-input[type="month"]:focus {
-  outline: none;
-}
 .montos {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 5px;
 }
 
 .montos label {
-    font-weight: bold;
-    display: block;
-    margin: 1rem 0;
-    font-size: 25px;
+  font-weight: bold;
+  display: block;
+  margin: 1rem 0;
+  font-size: 25px;
 }
 </style>
