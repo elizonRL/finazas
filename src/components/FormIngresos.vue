@@ -24,7 +24,8 @@ export default {
     methods: {
         addIngresos() {
             this.$emit('submit', this.ingresos, this.month)
-            this.ingresos = ""
+            this.ingresos = "";
+            this.month = "";
         }
     }
 }

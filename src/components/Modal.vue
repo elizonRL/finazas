@@ -114,39 +114,7 @@ span:hover {
     animation-duration: 0.4s;
 }
 
-.gastos-grup {
-    display: flex;
-    text-align: center;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
 
-.gastos-grup input {
-    width: 100%;
-    padding: 20px;
-    margin: 10px;
-    height: 30px;
-    justify-content: center;
-}
-
-.gastos-grup label {
-    font-weight: bold;
-    display: block;
-    margin: 1rem 0;
-    font-size: 25px;
-}
-
-button {
-    padding: 1rem 1rem;
-    width: 150px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
 
 .closed:hover {
     background-color: rgb(172, 60, 60);

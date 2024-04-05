@@ -5,18 +5,23 @@
         <h1>Agrega tus gastos</h1>
       </template>
       <template #conten>
-        <div class="montos">
-          <label for="monto">Monto</label>
-          <input type="text" id="monto" />
+        <div class="header-ingreso">
+          <samp><Clendar/> Mes: {{ showAddGastos.data.month }}</samp>
+          <samp>Ingreso: {{ showAddGastos.data.ingreso }}</samp>
+          <samp>Porcentaje Gastado: {{ showAddGastos.data.porcentaje }} %</samp>
         </div>
-        <div class="montos">
+        <div class="gastos-grup">
+          <label for="monto">Monto</label>
+          <input type="text" id="monto"  v-model="conscepto"/>
+        </div>
+        <div class="gastos-grup">
           <label for="concepto">Concepto</label>
-          <input type="text" id="concepto" />
+          <input type="text" id="concepto"  v-model="gasto"/>
         </div>
       </template>
       <template #footer>
-        <button @click="updateGastos(showAddGastos.data.id)">Agregar</button>
-        <button @click="showAddGastos.show = false">Close</button>
+        <button class="closed" @click="showAddGastos.show = false">Close</button>
+        <button class="save" @click="addGastos()">Agregar</button>
       </template>
     </Modal>
 
@@ -79,12 +84,15 @@ import Modal from './Modal.vue';
 import Plus from './icons/Plus.vue';
 import Trash from './icons/Trash.vue';
 import Pencil from './icons/Pencil.vue';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import axios from 'axios';
 import FormIngresos from './FormIngresos.vue';
+import Clendar from './icons/Calendar.vue';
 //Variables reactivas
 const data = ref([]);
-const showAddGastos = ref({
+const conscepto = ref('');
+const gasto = ref('');
+const showAddGastos = reactive({
   show: false,
   data: {
     id: '',
@@ -100,6 +108,7 @@ const showAddGastos = ref({
 const fetchTodos = async () => {
   const res = await axios.get('http://localhost:8080/finanzas')
   data.value = res.data
+  
 }
 //Llamamos la funcion para traer los datos
 fetchTodos()
@@ -117,7 +126,7 @@ const addIngresos = async (ingresos, month) => {
     ingreso: nuewValue,
     month: date(month),
     gastos: [],
-    porcentaje: PorcentajeGastado()
+    porcentaje: 0 
   })
   data.value.push(res.data)
 
@@ -128,12 +137,12 @@ const date = (month) => {
 }
 
 //Funcion para calcular el porcentaje gastado
-const PorcentajeGastado = () => {
-  const gastosPorcentaje = data.value.map((gasto) => gasto.gastos)
-  const porcentaje = 0;
-  if (gastosPorcentaje.length === 0) return porcentaje;
-
-  return porcentaje;
+const PorcentajeGastado = (showAddGastos) => {
+  let totalGastos = showAddGastos.data.gastos.reduce((total, gasto) => {
+    return total + gasto.monto;
+  }, 0);
+  let porcentaje = (totalGastos * 100) / showAddGastos.data.ingreso;
+  showAddGastos.data.porcentaje = porcentaje;
 }
 
 //Funcion para eliminar los ingresos
@@ -153,12 +162,28 @@ const editIngresos = async (id) => {
 const openModal = (datas) => {
   showAddGastos.show = true;
   showAddGastos.data = { ...datas }
-  console.log(showAddGastos.data , 'data', showAddGastos.show)
+  console.log(showAddGastos.data, 'data', showAddGastos.show)
 }
 const updateGastos = async (id) => {
   const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
     gastos: gastos.value
   });
+  fetchTodos()
+}
+
+const addGastos = async () => {
+  PorcentajeGastado(showAddGastos)
+  const gastosUpdate = {
+    concepto: conscepto.value,
+    monto: gasto.value
+  }
+  showAddGastos.data.gastos.push(gastosUpdate)
+  const { id , gastos} = showAddGastos.data;
+  showAddGastos.show = false;
+  const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
+    gastos: gastos,
+    porcentaje: showAddGastos.data.porcentaje
+  })
   fetchTodos()
 }
 
@@ -258,5 +283,68 @@ td {
   display: block;
   margin: 1rem 0;
   font-size: 25px;
+}
+
+.gastos-grup {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.gastos-grup input {
+  width: 100%;
+  padding: 20px;
+  margin: 10px;
+  height: 30px;
+  justify-content: center;
+}
+
+.gastos-grup label {
+  font-weight: bold;
+  display: block;
+  margin: 1rem 0;
+  font-size: 25px;
+}
+
+button {
+  padding: 1rem 1rem;
+  width: 150px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.closed:hover {
+  background-color: rgb(172, 60, 60);
+
+}
+
+.save:hover {
+  background-color: rgb(60, 172, 60);
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin: 1rem 0;
+  font-size: 25px;
+}
+.header-ingreso {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  justify-content: center;
+  align-items: center;
+ width: 100%;
+}
+samp {
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 </style>
