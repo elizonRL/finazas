@@ -6,17 +6,19 @@
       </template>
       <template #conten>
         <div class="header-ingreso">
-          <samp><Clendar/> Mes: {{ showAddGastos.data.month }}</samp>
+          <samp>
+            <Clendar /> Mes: {{ showAddGastos.data.month }}
+          </samp>
           <samp>Ingreso: {{ showAddGastos.data.ingreso }}</samp>
           <samp>Porcentaje Gastado: {{ showAddGastos.data.porcentaje }} %</samp>
         </div>
         <div class="gastos-grup">
           <label for="monto">Monto</label>
-          <input type="text" id="monto"  v-model="conscepto"/>
+          <input type="text" id="monto" v-model="conscepto" />
         </div>
         <div class="gastos-grup">
           <label for="concepto">Concepto</label>
-          <input type="text" id="concepto"  v-model="gasto"/>
+          <input type="text" id="concepto" v-model="gasto" />
         </div>
       </template>
       <template #footer>
@@ -108,7 +110,7 @@ const showAddGastos = reactive({
 const fetchTodos = async () => {
   const res = await axios.get('http://localhost:8080/finanzas')
   data.value = res.data
-  
+
 }
 //Llamamos la funcion para traer los datos
 fetchTodos()
@@ -126,7 +128,7 @@ const addIngresos = async (ingresos, month) => {
     ingreso: nuewValue,
     month: date(month),
     gastos: [],
-    porcentaje: 0 
+    porcentaje: 0
   })
   data.value.push(res.data)
 
@@ -137,12 +139,12 @@ const date = (month) => {
 }
 
 //Funcion para calcular el porcentaje gastado
-const PorcentajeGastado = (showAddGastos) => {
-  let totalGastos = showAddGastos.data.gastos.reduce((total, gasto) => {
-    return total + gasto.monto;
-  }, 0);
+const porcentajeGastado = (showAddGastos) => {
+  let totalGastos = showAddGastos.data.gastos.map(gasto => gasto.monto).reduce((acc, monto) => acc + monto, 0)
+  
   let porcentaje = (totalGastos * 100) / showAddGastos.data.ingreso;
   showAddGastos.data.porcentaje = porcentaje;
+  return totalGastos
 }
 
 //Funcion para eliminar los ingresos
@@ -163,26 +165,29 @@ const openModal = (datas) => {
   showAddGastos.show = true;
   showAddGastos.data = { ...datas }
   console.log(showAddGastos.data, 'data', showAddGastos.show)
+
 }
-const updateGastos = async (id) => {
+/* const updateGastos = async (id) => {
   const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
     gastos: gastos.value
   });
   fetchTodos()
-}
-
+} */
+//Funcion para agregar los gastos
 const addGastos = async () => {
-  PorcentajeGastado(showAddGastos)
   const gastosUpdate = {
     concepto: conscepto.value,
-    monto: gasto.value
+    monto: parseFloat(gasto.value)
   }
   showAddGastos.data.gastos.push(gastosUpdate)
-  const { id , gastos} = showAddGastos.data;
+  showAddGastos.data.gastos = [...showAddGastos.data.gastos]
+  const total = porcentajeGastado(showAddGastos)
+  const { id, gastos, porcentaje } = showAddGastos.data;
   showAddGastos.show = false;
   const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
     gastos: gastos,
-    porcentaje: showAddGastos.data.porcentaje
+    porcentaje: porcentaje,
+    totalGastado: total
   })
   fetchTodos()
 }
@@ -327,19 +332,22 @@ button {
 .save:hover {
   background-color: rgb(60, 172, 60);
 }
+
 label {
   font-weight: bold;
   display: block;
   margin: 1rem 0;
   font-size: 25px;
 }
+
 .header-ingreso {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
+  grid-template-columns: repeat(3, 1fr);
   justify-content: center;
   align-items: center;
- width: 100%;
+  width: 100%;
 }
+
 samp {
   font-size: 20px;
   font-weight: bold;
