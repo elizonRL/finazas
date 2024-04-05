@@ -72,4 +72,17 @@ input[type="month"] {
 input[type="month"]:focus {
   outline: none;
 }
+button {
+  padding: 0.5rem 1rem;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--color-secondary);
+}
+
 </style>

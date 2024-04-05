@@ -13,12 +13,12 @@
           <samp>Porcentaje Gastado: {{ showAddGastos.data.porcentaje }} %</samp>
         </div>
         <div class="gastos-grup">
-          <label for="monto">Monto</label>
-          <input type="text" id="monto" v-model="conscepto" />
+          <label for="concepto">Concepto</label>
+          <input type="text" id="concepto" v-model="concepto" />
         </div>
         <div class="gastos-grup">
-          <label for="concepto">Concepto</label>
-          <input type="text" id="concepto" v-model="gasto" />
+          <label for="monto">Monto</label>
+          <input type="text" id="monto" v-model="gasto" />
         </div>
       </template>
       <template #footer>
@@ -92,7 +92,7 @@ import FormIngresos from './FormIngresos.vue';
 import Clendar from './icons/Calendar.vue';
 //Variables reactivas
 const data = ref([]);
-const conscepto = ref('');
+const concepto = ref('');
 const gasto = ref('');
 const showAddGastos = reactive({
   show: false,
@@ -104,6 +104,16 @@ const showAddGastos = reactive({
     porcentaje: 0
   }
 });
+const showEditIngresos = reactive({
+  show: false,
+  data: {
+    id: '',
+    gastos: '',
+    month: '',
+    gastos: [],
+    porcentaje: 0
+  }
+})
 
 //Funciones
 //Funcion para traer los datos de la base de datos
@@ -154,10 +164,7 @@ const removeIngresos = async (id) => {
 }
 //Funcion para editar los ingresos
 const editIngresos = async (id) => {
-  const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
-    ingreso: ingresos.value,
-    month: month.value
-  });
+  
   fetchTodos()
 }
 //Funcion para abrir el modal
@@ -176,9 +183,11 @@ const openModal = (datas) => {
 //Funcion para agregar los gastos
 const addGastos = async () => {
   const gastosUpdate = {
-    concepto: conscepto.value,
+    concepto: concepto.value,
     monto: parseFloat(gasto.value)
   }
+  concepto.value = '';
+  gasto.value = '';
   showAddGastos.data.gastos.push(gastosUpdate)
   showAddGastos.data.gastos = [...showAddGastos.data.gastos]
   const total = porcentajeGastado(showAddGastos)
