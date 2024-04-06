@@ -26,6 +26,18 @@
         <button class="save" @click="addGastos()">Agregar</button>
       </template>
     </Modal>
+    <Modal :show="showEditIngresos.show" @close="showEditIngresos.show = false">
+      <template #header>
+        <h1>Editar Ingresos</h1>
+      </template>
+      <template #conten>
+        <FromEditIngresos :data="showEditIngresos.data" />
+      </template>
+      <template #footer>
+        <button class="closed" @click="showEditIngresos.show = false">Close</button>
+        <button class="save" @click="updateIngresos()">Guardar</button>
+      </template>
+    </Modal>
 
     <div class="header_finanza">
       <h1>Agrega Tus Finanzas</h1>
@@ -63,7 +75,7 @@
                 {{ datas.porcentaje }} %
               </td>
               <td>
-                <Pencil @click="editIngresos(datas.id)" />
+                <Pencil @click="editIngresos(datas)" />
               </td>
               <td>
                 <Trash @click="removeIngresos(datas.id)" />
@@ -90,6 +102,7 @@ import { reactive, ref } from 'vue';
 import axios from 'axios';
 import FormIngresos from './FormIngresos.vue';
 import Clendar from './icons/Calendar.vue';
+import FromEditIngresos from './FromEditIngresos.vue';
 //Variables reactivas
 const data = ref([]);
 const concepto = ref('');
@@ -151,10 +164,10 @@ const date = (month) => {
 //Funcion para calcular el porcentaje gastado
 const porcentajeGastado = (showAddGastos) => {
   let totalGastos = showAddGastos.data.gastos.map(gasto => gasto.monto).reduce((acc, monto) => acc + monto, 0)
-  
+
   let porcentaje = (totalGastos * 100) / showAddGastos.data.ingreso;
   showAddGastos.data.porcentaje = porcentaje;
-  return totalGastos
+  return {totalGastos, porcentaje}
 }
 
 //Funcion para eliminar los ingresos
@@ -163,23 +176,29 @@ const removeIngresos = async (id) => {
   fetchTodos()
 }
 //Funcion para editar los ingresos
-const editIngresos = async (id) => {
-  
+const editIngresos = async (datas) => {
+  showEditIngresos.show = true;
+  showEditIngresos.data = { ...datas }
+}
+//Funcion para actualizar los ingresos
+const updateIngresos = async () => {
+  let porcentaje =porcentajeGastado(showEditIngresos).porcentaje
+  let { id, ingreso, month} = showEditIngresos.data;
+  const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
+    ingreso: ingreso,
+    month: date(month),
+    porcentaje: porcentaje,
+    
+  });
+  showEditIngresos.show = false;
   fetchTodos()
 }
 //Funcion para abrir el modal
 const openModal = (datas) => {
   showAddGastos.show = true;
   showAddGastos.data = { ...datas }
-  console.log(showAddGastos.data, 'data', showAddGastos.show)
 
 }
-/* const updateGastos = async (id) => {
-  const res = await axios.put(`http://localhost:8080/finanzas/${id}`, {
-    gastos: gastos.value
-  });
-  fetchTodos()
-} */
 //Funcion para agregar los gastos
 const addGastos = async () => {
   const gastosUpdate = {
@@ -190,7 +209,8 @@ const addGastos = async () => {
   gasto.value = '';
   showAddGastos.data.gastos.push(gastosUpdate)
   showAddGastos.data.gastos = [...showAddGastos.data.gastos]
-  const total = porcentajeGastado(showAddGastos)
+  const total = porcentajeGastado(showAddGastos).totalGastos
+  console.log(total)
   const { id, gastos, porcentaje } = showAddGastos.data;
   showAddGastos.show = false;
   const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
