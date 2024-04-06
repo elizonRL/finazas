@@ -178,7 +178,7 @@ const addIngresos = async (ingresos, month) => {
       porcentaje: 0
     })
     data.value.push(res.data)
-    showAlert('Ingresos agregados correctamente', 'success');
+    showAlert('Ingresos agregados correctamente', 'success'); 
   } catch (error) {
     showAlert('Error al agregar los ingresos');
   }
@@ -200,26 +200,38 @@ const porcentajeGastado = (showAddGastos) => {
 
 //Funcion para eliminar los ingresos
 const removeIngresos = async (id) => {
-  const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
-  fetchTodos()
+  try {
+    const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
+    fetchTodos()
+    showAlert('Ingresos eliminados correctamente', 'success');
+  } catch (error) {
+    showAlert('Error al eliminar los ingresos');
+  }
+ 
 }
 //Funcion para editar los ingresos
 const editIngresos = async (datas) => {
+  
   showEditIngresos.show = true;
   showEditIngresos.data = { ...datas }
 }
 //Funcion para actualizar los ingresos
 const updateIngresos = async () => {
-  let porcentaje = porcentajeGastado(showEditIngresos).porcentaje
-  let { id, ingreso, month } = showEditIngresos.data;
-  const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
-    ingreso: ingreso,
-    month: date(month),
-    porcentaje: porcentaje,
-
-  });
-  showEditIngresos.show = false;
-  fetchTodos()
+  try {
+    let porcentaje = porcentajeGastado(showEditIngresos).porcentaje
+    let { id, ingreso, month } = showEditIngresos.data;
+    const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
+      ingreso: ingreso,
+      month: date(month),
+      porcentaje: porcentaje,
+  
+    });
+    showEditIngresos.show = false;
+    showAlert('Ingresos actualizados correctamente', 'success');
+    fetchTodos()
+  } catch (error) {
+    showAlert('Error al actualizar los ingresos');
+  }
 }
 //Funcion para abrir el modal
 const openModal = (datas) => {
@@ -228,25 +240,31 @@ const openModal = (datas) => {
 
 }
 //Funcion para agregar los gastos
-const addGastos = async () => {
-  const gastosUpdate = {
-    concepto: concepto.value,
-    monto: parseFloat(gasto.value)
-  }
-  concepto.value = '';
-  gasto.value = '';
-  showAddGastos.data.gastos.push(gastosUpdate)
-  showAddGastos.data.gastos = [...showAddGastos.data.gastos]
-  const total = porcentajeGastado(showAddGastos).totalGastos
 
-  const { id, gastos, porcentaje } = showAddGastos.data;
-  showAddGastos.show = false;
-  const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
-    gastos: gastos,
-    porcentaje: porcentaje,
-    totalGastado: total
-  })
-  fetchTodos()
+const addGastos = async () => {
+  try {
+    const gastosUpdate = {
+      concepto: concepto.value,
+      monto: parseFloat(gasto.value)
+    }
+    concepto.value = '';
+    gasto.value = '';
+    showAddGastos.data.gastos.push(gastosUpdate)
+    showAddGastos.data.gastos = [...showAddGastos.data.gastos]
+    const total = porcentajeGastado(showAddGastos).totalGastos
+  
+    const { id, gastos, porcentaje } = showAddGastos.data;
+    showAddGastos.show = false;
+    const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
+      gastos: gastos,
+      porcentaje: porcentaje,
+      totalGastado: total
+    })
+    fetchTodos()
+    showAlert('Gastos agregados correctamente', 'success');
+} catch (error) {
+  showAlert('Error al agregar los gastos');
+}
 }
 
 </script>
