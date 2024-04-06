@@ -1,95 +1,97 @@
 <template>
   <section>
-    <Modal :show="showAddGastos.show" @close="showAddGastos.show = flase">
-      <template #header>
-        <h1>Agrega tus gastos</h1>
-      </template>
-      <template #conten>
-        <div class="header-ingreso">
-          <samp>
-            <Clendar /> Mes: {{ showAddGastos.data.month }}
-          </samp>
-          <samp>Ingreso: {{ showAddGastos.data.ingreso }}</samp>
-          <samp>Porcentaje Gastado: {{ showAddGastos.data.porcentaje }} %</samp>
-        </div>
-        <div class="gastos-grup">
-          <label for="concepto">Concepto</label>
-          <input type="text" id="concepto" v-model="concepto" />
-        </div>
-        <div class="gastos-grup">
-          <label for="monto">Monto</label>
-          <input type="text" id="monto" v-model="gasto" />
-        </div>
-      </template>
-      <template #footer>
-        <button class="closed" @click="showAddGastos.show = false">Close</button>
-        <button class="save" @click="addGastos()">Agregar</button>
-      </template>
-    </Modal>
-    <Modal :show="showEditIngresos.show" @close="showEditIngresos.show = false">
-      <template #header>
-        <h1>Editar Ingresos</h1>
-      </template>
-      <template #conten>
-        <FromEditIngresos :data="showEditIngresos.data" />
-      </template>
-      <template #footer>
-        <button class="closed" @click="showEditIngresos.show = false">Close</button>
-        <button class="save" @click="updateIngresos()">Guardar</button>
-      </template>
-    </Modal>
-
-    <div class="header_finanza">
-      <h1>Agrega Tus Finanzas</h1>
-    </div>
-    <article>
-      <FormIngresos @submit="addIngresos" />
-    </article>
-    <div class="card-ingresos">
-      <div v-if="data.length === 0">
-        <h1>No hay ingresos</h1>
+    
+    <Spiner v-if="isLoading" class="spinner"/>
+<div v-else>
+  <Modal :show="showAddGastos.show" @close="showAddGastos.show = flase">
+    <template #header>
+      <h1>Agrega tus gastos</h1>
+    </template>
+    <template #conten>
+      <div class="header-ingreso">
+        <samp>
+          <Clendar /> Mes: {{ showAddGastos.data.month }}
+        </samp>
+        <samp>Ingreso: {{ showAddGastos.data.ingreso }}</samp>
+        <samp>Porcentaje Gastado: {{ showAddGastos.data.porcentaje }} %</samp>
       </div>
-
-      <div v-else>
-        <div class="ingresos-header">
-          <h2>Mis ingresos</h2>
-
-        </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Mes</th>
-              <th>Ingreso</th>
-              <th>Porcentaje Gastado</th>
-              <th>Editar Ingreso</th>
-              <th>Eliminar Ingreso</th>
-              <th>Agregar gastos</th>
-            </tr>
-          </thead>
-          <tbody v-for="datas in data" :key="datas.id">
-            <tr>
-              <td>{{ datas.month }}</td>
-              <td>$ {{ datas.ingreso }}</td>
-              <td>
-                {{ datas.porcentaje }} %
-              </td>
-              <td>
-                <Pencil @click="editIngresos(datas)" />
-              </td>
-              <td>
-                <Trash @click="removeIngresos(datas.id)" />
-              </td>
-              <td>
-                <Plus @click="openModal(datas)" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
+      <div class="gastos-grup">
+        <label for="concepto">Concepto</label>
+        <input type="text" id="concepto" v-model="concepto" />
       </div>
+      <div class="gastos-grup">
+        <label for="monto">Monto</label>
+        <input type="text" id="monto" v-model="gasto" />
+      </div>
+    </template>
+    <template #footer>
+      <button class="closed" @click="showAddGastos.show = false">Close</button>
+      <button class="save" @click="addGastos()">Agregar</button>
+    </template>
+  </Modal>
+  <Modal :show="showEditIngresos.show" @close="showEditIngresos.show = false">
+    <template #header>
+      <h1>Editar Ingresos</h1>
+    </template>
+    <template #conten>
+      <FromEditIngresos :data="showEditIngresos.data" />
+    </template>
+    <template #footer>
+      <button class="closed" @click="showEditIngresos.show = false">Close</button>
+      <button class="save" @click="updateIngresos()">Guardar</button>
+    </template>
+  </Modal>
+  <div class="header_finanza">
+    <h1>Agrega Tus Finanzas</h1>
+  </div>
+  <article>
+    <FormIngresos @submit="addIngresos" />
+  </article>
+  <div class="card-ingresos">
+    <div v-if="data.length === 0">
+      <h1>No hay ingresos</h1>
     </div>
 
+    <div v-else>
+      <div class="ingresos-header">
+        <h2>Mis ingresos</h2>
+
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Mes</th>
+            <th>Ingreso</th>
+            <th>Porcentaje Gastado</th>
+            <th>Editar Ingreso</th>
+            <th>Eliminar Ingreso</th>
+            <th>Agregar gastos</th>
+          </tr>
+        </thead>
+        <tbody v-for="datas in data" :key="datas.id">
+          <tr>
+            <td>{{ datas.month }}</td>
+            <td>$ {{ datas.ingreso }}</td>
+            <td>
+              {{ datas.porcentaje }} %
+            </td>
+            <td>
+              <Pencil @click="editIngresos(datas)" />
+            </td>
+            <td>
+              <Trash @click="removeIngresos(datas.id)" />
+            </td>
+            <td>
+              <Plus @click="openModal(datas)" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
   </section>
 </template>
 <script setup>
@@ -103,8 +105,10 @@ import axios from 'axios';
 import FormIngresos from './FormIngresos.vue';
 import Clendar from './icons/Calendar.vue';
 import FromEditIngresos from './FromEditIngresos.vue';
+import Spiner from './Spiner.vue';
 //Variables reactivas
 const data = ref([]);
+const isLoading = ref(false);
 const concepto = ref('');
 const gasto = ref('');
 const showAddGastos = reactive({
@@ -131,9 +135,10 @@ const showEditIngresos = reactive({
 //Funciones
 //Funcion para traer los datos de la base de datos
 const fetchTodos = async () => {
+  isLoading.value = true;
   const res = await axios.get('http://localhost:8080/finanzas')
   data.value = res.data
-
+  isLoading.value = false;
 }
 //Llamamos la funcion para traer los datos
 fetchTodos()
@@ -210,7 +215,7 @@ const addGastos = async () => {
   showAddGastos.data.gastos.push(gastosUpdate)
   showAddGastos.data.gastos = [...showAddGastos.data.gastos]
   const total = porcentajeGastado(showAddGastos).totalGastos
-  console.log(total)
+
   const { id, gastos, porcentaje } = showAddGastos.data;
   showAddGastos.show = false;
   const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
@@ -223,6 +228,7 @@ const addGastos = async () => {
 
 </script>
 <style scoped>
+
 article {
   margin: 50px auto;
   padding: 1rem;
@@ -383,5 +389,10 @@ samp {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+.spinner {
+  margin: auto;
+  margin-top: 30px;
+ 
 }
 </style>
