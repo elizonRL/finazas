@@ -1,97 +1,99 @@
 <template>
   <section>
-    
-    <Spiner v-if="isLoading" class="spinner"/>
-<div v-else>
-  <Modal :show="showAddGastos.show" @close="showAddGastos.show = flase">
-    <template #header>
-      <h1>Agrega tus gastos</h1>
-    </template>
-    <template #conten>
-      <div class="header-ingreso">
-        <samp>
-          <Clendar /> Mes: {{ showAddGastos.data.month }}
-        </samp>
-        <samp>Ingreso: {{ showAddGastos.data.ingreso }}</samp>
-        <samp>Porcentaje Gastado: {{ showAddGastos.data.porcentaje }} %</samp>
-      </div>
-      <div class="gastos-grup">
-        <label for="concepto">Concepto</label>
-        <input type="text" id="concepto" v-model="concepto" />
-      </div>
-      <div class="gastos-grup">
-        <label for="monto">Monto</label>
-        <input type="text" id="monto" v-model="gasto" />
-      </div>
-    </template>
-    <template #footer>
-      <button class="closed" @click="showAddGastos.show = false">Close</button>
-      <button class="save" @click="addGastos()">Agregar</button>
-    </template>
-  </Modal>
-  <Modal :show="showEditIngresos.show" @close="showEditIngresos.show = false">
-    <template #header>
-      <h1>Editar Ingresos</h1>
-    </template>
-    <template #conten>
-      <FromEditIngresos :data="showEditIngresos.data" />
-    </template>
-    <template #footer>
-      <button class="closed" @click="showEditIngresos.show = false">Close</button>
-      <button class="save" @click="updateIngresos()">Guardar</button>
-    </template>
-  </Modal>
-  <div class="header_finanza">
-    <h1>Agrega Tus Finanzas</h1>
-  </div>
-  <article>
-    <FormIngresos @submit="addIngresos" />
-  </article>
-  <div class="card-ingresos">
-    <div v-if="data.length === 0">
-      <h1>No hay ingresos</h1>
+    <div v-if="isLoading" class="louder">
+      <Spiner class="spinner" />
     </div>
-
     <div v-else>
-      <div class="ingresos-header">
-        <h2>Mis ingresos</h2>
 
+      <Modal :show="showAddGastos.show" @close="showAddGastos.show = flase">
+        <template #header>
+          <h1>Agrega tus gastos</h1>
+        </template>
+        <template #conten>
+          <div class="header-ingreso">
+            <samp>
+              <Clendar /> Mes: {{ showAddGastos.data.month }}
+            </samp>
+            <samp>Ingreso: {{ showAddGastos.data.ingreso }}</samp>
+            <samp>Porcentaje Gastado: {{ showAddGastos.data.porcentaje }} %</samp>
+          </div>
+          <div class="gastos-grup">
+            <label for="concepto">Concepto</label>
+            <input type="text" id="concepto" v-model="concepto" />
+          </div>
+          <div class="gastos-grup">
+            <label for="monto">Monto</label>
+            <input type="text" id="monto" v-model="gasto" />
+          </div>
+        </template>
+        <template #footer>
+          <button class="closed" @click="showAddGastos.show = false">Close</button>
+          <button class="save" @click="addGastos()">Agregar</button>
+        </template>
+      </Modal>
+      <Modal :show="showEditIngresos.show" @close="showEditIngresos.show = false">
+        <template #header>
+          <h1>Editar Ingresos</h1>
+        </template>
+        <template #conten>
+          <FromEditIngresos :data="showEditIngresos.data" />
+        </template>
+        <template #footer>
+          <button class="closed" @click="showEditIngresos.show = false">Close</button>
+          <button class="save" @click="updateIngresos()">Guardar</button>
+        </template>
+      </Modal>
+      <div class="header_finanza">
+        <h1>Agrega Tus Finanzas</h1>
       </div>
+      <Alert :message="alert.message" :show="alert.show" @close="alert.show = flase" :type="alert.type" />
+      <article>
+        <FormIngresos @submit="addIngresos" />
+      </article>
+      <div class="card-ingresos">
+        <div v-if="data.length === 0">
+          <h1>No hay ingresos</h1>
+        </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Mes</th>
-            <th>Ingreso</th>
-            <th>Porcentaje Gastado</th>
-            <th>Editar Ingreso</th>
-            <th>Eliminar Ingreso</th>
-            <th>Agregar gastos</th>
-          </tr>
-        </thead>
-        <tbody v-for="datas in data" :key="datas.id">
-          <tr>
-            <td>{{ datas.month }}</td>
-            <td>$ {{ datas.ingreso }}</td>
-            <td>
-              {{ datas.porcentaje }} %
-            </td>
-            <td>
-              <Pencil @click="editIngresos(datas)" />
-            </td>
-            <td>
-              <Trash @click="removeIngresos(datas.id)" />
-            </td>
-            <td>
-              <Plus @click="openModal(datas)" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div v-else>
+          <div class="ingresos-header">
+            <h2>Mis ingresos</h2>
+          </div>
 
+          <table>
+            <thead>
+              <tr>
+                <th>Mes</th>
+                <th>Ingreso</th>
+                <th>Porcentaje Gastado</th>
+                <th>Editar Ingreso</th>
+                <th>Eliminar Ingreso</th>
+                <th>Agregar gastos</th>
+              </tr>
+            </thead>
+            <tbody v-for="datas in data" :key="datas.id">
+              <tr>
+                <td>{{ datas.month }}</td>
+                <td>$ {{ datas.ingreso }}</td>
+                <td>
+                  {{ datas.porcentaje }} %
+                </td>
+                <td>
+                  <Pencil @click="editIngresos(datas)" />
+                </td>
+                <td>
+                  <Trash @click="removeIngresos(datas.id)" />
+                </td>
+                <td>
+                  <Plus @click="openModal(datas)" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
     </div>
-  </div>
-</div>
   </section>
 </template>
 <script setup>
@@ -106,6 +108,7 @@ import FormIngresos from './FormIngresos.vue';
 import Clendar from './icons/Calendar.vue';
 import FromEditIngresos from './FromEditIngresos.vue';
 import Spiner from './Spiner.vue';
+import Alert from './Alert.vue';
 //Variables reactivas
 const data = ref([]);
 const isLoading = ref(false);
@@ -130,35 +133,55 @@ const showEditIngresos = reactive({
     gastos: [],
     porcentaje: 0
   }
-})
+});
+const alert = reactive({
+  show: false,
+  message: "",
+  type: "danger",
+});
 
 //Funciones
 //Funcion para traer los datos de la base de datos
+function showAlert(message, type = "danger") {
+  alert.show = true;
+  alert.message = message;
+  alert.type = type;
+}
+
 const fetchTodos = async () => {
-  isLoading.value = true;
-  const res = await axios.get('http://localhost:8080/finanzas')
-  data.value = res.data
+  try {
+    isLoading.value = true;
+    const res = await axios.get('http://localhost:8080/finanzas')
+    data.value = res.data
+  } catch (error) {
+    showAlert('Error al traer los datos de la base de datos');
+  }
   isLoading.value = false;
 }
 //Llamamos la funcion para traer los datos
 fetchTodos()
 //Funcion para agregar los ingresos
 const addIngresos = async (ingresos, month) => {
-  //Validamos que los campos no esten vacios
-  let nuewValue = parseFloat(ingresos);
-  let namComprobation = isNaN(nuewValue);
-  //Validamos que los campos no esten vacios
-  if (ingresos.value == '' || month.value === '') return alert('Debes Completar los campos')
-  if (namComprobation) return alert('Debes agregar un numero')
+  try {
+    //Validamos que los campos no esten vacios
+    let nuewValue = parseFloat(ingresos);
+    let namComprobation = isNaN(nuewValue);
+    //Validamos que los campos no esten vacios
+    if (ingresos.value == '' && month.value === '') return showAlert('Debes Completar los campos')
+    if (namComprobation) return showAlert('Este campo solo acepta numeros')
 
-  //Hacemos la peticion a la base de datos
-  const res = await axios.post('http://localhost:8080/finanzas', {
-    ingreso: nuewValue,
-    month: date(month),
-    gastos: [],
-    porcentaje: 0
-  })
-  data.value.push(res.data)
+    //Hacemos la peticion a la base de datos
+    const res = await axios.post('http://localhost:8080/finanzas', {
+      ingreso: nuewValue,
+      month: date(month),
+      gastos: [],
+      porcentaje: 0
+    })
+    data.value.push(res.data)
+    showAlert('Ingresos agregados correctamente', 'success');
+  } catch (error) {
+    showAlert('Error al agregar los ingresos');
+  }
 
 }
 //Funcion para dar formato a la fecha
@@ -172,7 +195,7 @@ const porcentajeGastado = (showAddGastos) => {
 
   let porcentaje = (totalGastos * 100) / showAddGastos.data.ingreso;
   showAddGastos.data.porcentaje = porcentaje;
-  return {totalGastos, porcentaje}
+  return { totalGastos, porcentaje }
 }
 
 //Funcion para eliminar los ingresos
@@ -187,13 +210,13 @@ const editIngresos = async (datas) => {
 }
 //Funcion para actualizar los ingresos
 const updateIngresos = async () => {
-  let porcentaje =porcentajeGastado(showEditIngresos).porcentaje
-  let { id, ingreso, month} = showEditIngresos.data;
+  let porcentaje = porcentajeGastado(showEditIngresos).porcentaje
+  let { id, ingreso, month } = showEditIngresos.data;
   const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
     ingreso: ingreso,
     month: date(month),
     porcentaje: porcentaje,
-    
+
   });
   showEditIngresos.show = false;
   fetchTodos()
@@ -228,7 +251,6 @@ const addGastos = async () => {
 
 </script>
 <style scoped>
-
 article {
   margin: 50px auto;
   padding: 1rem;
@@ -390,9 +412,25 @@ samp {
   align-items: center;
   text-align: center;
 }
+
 .spinner {
   margin: auto;
   margin-top: 30px;
- 
+
+}
+
+.louder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: auto;
+  height: 100vh;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 </style>

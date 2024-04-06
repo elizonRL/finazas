@@ -2,10 +2,14 @@
 @import "./normalizer.css";
 @import url('https://fonts.googleapis.com/css2?family=Imbue:opsz,wght@10..100,100..900&family=Rubik+Scribble&display=swap');
 :root {
-  --color-primary: #fff;
-  --color-secondary: #42b883;
-  --color-tertiary: #0000ff;
-  --color-quaternary: #000;
+  --backgroung-color: #23272E;
+  --text-color: #fff;
+  --navbar-color: #15181C;
+  --accent-color: #41B883;
+  --danger-color: #E06C75;
+  --warning-color:#E5c07b;
+  --info-color: #61AFEF;
+  --secondary-color: grey;
 }
 #app {
   max-width: 1200px;
