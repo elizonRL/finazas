@@ -10,7 +10,6 @@
     height: 36px;
     border-radius: 50%;
     border-left-color: var(--accent-color);
-
     animation: spin 1s ease infinite;
 }
 
