@@ -3,15 +3,17 @@ import Moneybag from './icons/Moneybag.vue';
 </script>
 <template>
     <header>
-        <div class="header_finanza">
-            <Moneybag />
-            <h1>Finanzas</h1>
-        </div>
+        <RouterLink to="/">
+            <div class="header_finanza">
+                <Moneybag />
+                <h1>Finanzas</h1>
+            </div>  
+        </RouterLink>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
+                <li><RouterLink to="/">Home</RouterLink></li>
                 <li><a href="#">Ingresos</a></li>
-                <li><a href="#">Gastos</a></li>
+                <li><RouterLink to="/about">About</RouterLink></li>
             </ul>
         </nav>
     </header>
@@ -50,5 +52,9 @@ h1{
     font-size: 44px;
     margin-left: 1rem;
     font-weight: 700;
+}
+a {
+    text-decoration: none;
+    color: #333;
 }
 </style>
