@@ -6,14 +6,23 @@
             el porcentaje. Con esta web podras administrar de forma eficiente.</p>
         <p>
             En su version 1.0.0 vera las siguientes funcionalidades:
-            <ul>
-                <li>Registro de ingresos</li>
-                <li>Registro de gastos</li>
-                <li>Modificacion de ingresos</li>
-                <li>Eliminacion de los ingresos</li>
-            </ul>
-            Estas son algunas de las funcionalidades que podras encontrar en la version 1.0.0 de este proyecto. Esperamos
+        </p>
+        <ul>
+            <li>Registro de ingresos</li>
+            <li>Registro de gastos</li>
+            <li>Modificacion de ingresos</li>
+            <li>Eliminacion de los ingresos</li>
+        </ul>
+        <p>
+            Estas son algunas de las funcionalidades que podras encontrar en la version 1.0.0 de este proyecto.
+            Esperamos
             que sea de tu agrado y que puedas disfrutar de la experiencia de administrar tus finanzas personales.
+        </p>
+        <p>
+            En vesiones futuras podras encontrar se incorporaran algunas funcionalidades estras, como la puesta en
+            funcionamiento
+            de muestra de graficos y estadisticas de tus ingresos y gastos, asi como tambien la posibilidad de exportar
+            tus datos
         </p>
     </main>
 </template>
@@ -39,10 +48,14 @@ p {
     text-wrap: wrap;
     margin-bottom: 20px;
 }
+
 ul {
     font-size: 22px;
     text-wrap: wrap;
     margin-bottom: 20px;
 }
 
+li {
+    list-style: none;
+}
 </style>

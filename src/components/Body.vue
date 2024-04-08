@@ -270,7 +270,7 @@ const addGastos = async () => {
 </script>
 <style scoped>
 article {
-  margin: 50px auto;
+  margin: 10px auto;
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 0.25rem;

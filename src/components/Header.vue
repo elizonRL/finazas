@@ -12,7 +12,7 @@ import Moneybag from './icons/Moneybag.vue';
         <nav>
             <ul>
                 <li><RouterLink to="/">Home</RouterLink></li>
-                <li><a href="#">Ingresos</a></li>
+                <li><RouterLink to="/ingresos">Ingresos</RouterLink></li>
                 <li><RouterLink to="/about">About</RouterLink></li>
             </ul>
         </nav>

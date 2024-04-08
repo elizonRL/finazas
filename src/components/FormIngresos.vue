@@ -1,37 +1,37 @@
 <template>
-    <form >
-        <div class="date">
-            <label for="fecha">Mes:</label>
-            <input type="month" id="fecha" v-model="month" />
-        </div>
-        <div>
-            <label for="Ingresos">Ingresos</label>
-            <input type="text" id="concepto" v-model="ingresos" />
-        </div>
-        <button @click.prevent="addIngresos()" >Agregar</button>
-    </form>
+  <form>
+    <div class="date">
+      <label for="fecha">Mes:</label>
+      <input type="month" id="fecha" v-model="month" />
+    </div>
+    <div>
+      <label for="Ingresos">Ingresos</label>
+      <input type="text" id="concepto" v-model="ingresos" />
+    </div>
+    <button @click.prevent="addIngresos()">Agregar</button>
+  </form>
 </template>
-<script >
+<script>
 export default {
-   
-    data() {
-        return {
-            month: "",
-            ingresos: ""
-        }
-    },
-    emits: ['submit'],
-    methods: {
-        addIngresos() {
-            this.$emit('submit', this.ingresos, this.month)
-            this.ingresos = "";
-            this.month = "";
-        }
+
+  data() {
+    return {
+      month: "",
+      ingresos: ""
     }
+  },
+  emits: ['submit'],
+  methods: {
+    addIngresos() {
+      this.$emit('submit', this.ingresos, this.month)
+      this.ingresos = "";
+      this.month = "";
+    }
+  }
 }
 </script>
 <style scoped>
-  .date {
+.date {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,6 +50,7 @@ form {
   margin: 1rem auto;
   justify-content: center;
 }
+
 input {
   width: 100%;
   padding: 10px;
@@ -65,6 +66,7 @@ label {
   margin: 1rem 0;
   font-size: 25px;
 }
+
 input[type="month"] {
   width: 100%;
 }
@@ -72,6 +74,7 @@ input[type="month"] {
 input[type="month"]:focus {
   outline: none;
 }
+
 button {
   padding: 0.5rem 1rem;
   background-color: #333;
@@ -82,7 +85,6 @@ button {
 }
 
 button:hover {
-  background-color: var(--color-secondary);
+  background-color: var(--accent-color);
 }
-
 </style>
