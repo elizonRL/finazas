@@ -65,6 +65,7 @@ import Trash from '@/components/icons/Trash.vue';
 import Pencil from '@/components/icons/Pencil.vue';
 import Modal from '@/components/Modal.vue';
 
+const url = ref(import.meta.env.VITE_URL);
 const ingresos = ref([]);
 const showEditIngreso = reactive({
   show: false,
@@ -83,6 +84,7 @@ const showEditIngreso = reactive({
 //Obtener los ingresos
 const getIngresos = async () => {
   const res = await axios.get('http://localhost:8080/finanzas');
+ console.log(url);
   ingresos.value = res.data;
 }
 getIngresos();
