@@ -1,13 +1,37 @@
 <template>
   <main>
+    <Modal :show="showEditIngreso.show" @close="showEditIngreso.show = false">
+      <template #header>
+        <h3>Edita tus ingresos</h3>
+      </template>
+      <template #conten>
+        <form>
+          <label for="month">Mes</label>
+          <input type="month" id="month" name="month" />
+          <label for="ingreso">Ingreso</label>
+          <input type="number" id="ingreso" name="ingreso" />
+        </form>
+      </template>
+      <template #footer>
+        <button @click="showEditIngreso.show = false">Cerrar</button>
+        <button @click="">Guardar</button>
+      </template>
+    </Modal>
     <h1>Ingresos</h1>
     <div v-if="ingresos.length == 0">
       <Span>No tiene ingresos registrados regitra uno </Span>
     </div>
     <div v-else>
       <Span>Detalle de los ingresos Mensuales</Span>
+      <p>Estos son tu ingresos mensuales registrados</p>
       <div class="grilla">
         <div class="card" v-for="datas in ingresos" :key="datas.id">
+          <div class="btn-grup">
+            <Plus/>
+            <Trash @click="deleteIngreso(datas.id)" />
+            <Pencil @click="editIngreso(datas)"/>
+          </div>
+        
           <div class="card-header">
             <h3>Ingresos</h3>
             <span>{{ datas.month }}</span>
@@ -34,16 +58,48 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import axios from 'axios';
+import Plus from '@/components/icons/Plus.vue';
+import Trash from '@/components/icons/Trash.vue';
+import Pencil from '@/components/icons/Pencil.vue';
+import Modal from '@/components/Modal.vue';
 
 const ingresos = ref([]);
+const showEditIngreso = reactive({
+  show: false,
+  data:
+    {
+      id: 0,
+      month: '',
+      ingreso: 0,
+      porcentaje: 0,
+      gastos: [],
+      totalGastado: 0
+    }
+})
 
+//Funciones
+//Obtener los ingresos
 const getIngresos = async () => {
   const res = await axios.get('http://localhost:8080/finanzas');
   ingresos.value = res.data;
 }
 getIngresos();
+//Eliminar un ingreso
+const deleteIngreso = async (id) => {
+  await axios.delete(`http://localhost:8080/finanzas/${id}`);
+  getIngresos();
+}
+const editIngreso = async (data) => {
+  showEditIngreso.show = true;
+  showEditIngreso.data = data;
+}
+/* const addGasto = async (id) => {
+  await axios.post(`http://localhost:8080/finanzas/${id}`);
+  getIngresos();
+} */
+
 </script>
 
 <style scoped>
@@ -120,5 +176,11 @@ span {
   align-items: flex-end;
   padding: 10px;
   text-align: center;
+}
+.btn-grup {
+  display: flex;
+  justify-content: end;
+  align-items: start;
+  padding: 10px;
 }
 </style>

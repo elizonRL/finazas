@@ -24,6 +24,10 @@
             de muestra de graficos y estadisticas de tus ingresos y gastos, asi como tambien la posibilidad de exportar
             tus datos
         </p>
+        <p>
+            Este proyecto fue creado por Elizon Rodriguez con el fin de ayudar a las perosonas a administrar
+            sus finanzas personales de una forma mas eficiente. Esta web es de uso libre y gratuito, fue creada con vue3. 
+        </p>
     </main>
 </template>
 <style scoped>
