@@ -32,8 +32,7 @@ defineProps({
 }
 
 input {
-    width: 100%;
-    padding: 1rem;
+    padding: 20px;
     border: 2px solid rgba(103, 224, 158, 0.5);
     border-radius: 0.5rem;
 }
@@ -44,10 +43,6 @@ input[type="month"] {
 }
 
 input[type="month"]:focus {
-    outline: none;
-}
-
-input[type="text"]:focus {
     outline: none;
 }
 </style>

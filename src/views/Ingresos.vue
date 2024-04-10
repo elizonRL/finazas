@@ -168,7 +168,6 @@ span {
   padding: 10px;
   border-radius: 5px;
 }
-
 .card-body {
   padding: 10px;
 }

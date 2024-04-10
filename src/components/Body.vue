@@ -109,6 +109,7 @@ import Clendar from './icons/Calendar.vue';
 import FromEditIngresos from './FromEditIngresos.vue';
 import Spiner from './Spiner.vue';
 import Alert from './Alert.vue';
+import { fetchTodos, showAlert } from './composable/httpsMethod.js';
 //Variables reactivas
 const data = ref([]);
 const isLoading = ref(false);
@@ -140,26 +141,10 @@ const alert = reactive({
   type: "danger",
 });
 
-//Funciones
-//Funcion para traer los datos de la base de datos
-function showAlert(message, type = "danger") {
-  alert.show = true;
-  alert.message = message;
-  alert.type = type;
-}
-
-const fetchTodos = async () => {
-  try {
-    isLoading.value = true;
-    const res = await axios.get('http://localhost:8080/finanzas')
-    data.value = res.data
-  } catch (error) {
-    showAlert('Error al traer los datos de la base de datos');
-  }
-  isLoading.value = false;
-}
-//Llamamos la funcion para traer los datos
-fetchTodos()
+/* Funciones
+Funcion para traer los datos de la base de dato
+Llamamos la funcion para traer los datos */
+fetchTodos(data, isLoading);
 //Funcion para agregar los ingresos
 const addIngresos = async (ingresos, month) => {
   try {
@@ -167,8 +152,8 @@ const addIngresos = async (ingresos, month) => {
     let nuewValue = parseFloat(ingresos);
     let namComprobation = isNaN(nuewValue);
     //Validamos que los campos no esten vacios
-    if (ingresos.value == '' && month.value === '') return showAlert('Debes Completar los campos')
-    if (namComprobation) return showAlert('Este campo solo acepta numeros')
+    if (ingresos.value == '' || month.value === '') return showAlert(alert, 'Debes Completar los campos')
+    if (namComprobation) return showAlert(alert, 'Este campo solo acepta numeros')
 
     //Hacemos la peticion a la base de datos
     const res = await axios.post('http://localhost:8080/finanzas', {
@@ -178,9 +163,9 @@ const addIngresos = async (ingresos, month) => {
       porcentaje: 0
     })
     data.value.push(res.data)
-    showAlert('Ingresos agregados correctamente', 'success'); 
+    showAlert(alert, 'Ingresos agregados correctamente', 'success');
   } catch (error) {
-    showAlert('Error al agregar los ingresos');
+    showAlert(alert, 'Error al agregar los ingresos');
   }
 
 }
@@ -202,16 +187,16 @@ const porcentajeGastado = (showAddGastos) => {
 const removeIngresos = async (id) => {
   try {
     const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
-    fetchTodos()
-    showAlert('Ingresos eliminados correctamente', 'success');
+    fetchTodos(data, isLoading)
+    showAlert(alert, 'Ingresos eliminados correctamente', 'success');
   } catch (error) {
-    showAlert('Error al eliminar los ingresos');
+    showAlert(alert, 'Error al eliminar los ingresos');
   }
- 
+
 }
 //Funcion para editar los ingresos
 const editIngresos = async (datas) => {
-  
+
   showEditIngresos.show = true;
   showEditIngresos.data = { ...datas }
 }
@@ -224,13 +209,13 @@ const updateIngresos = async () => {
       ingreso: ingreso,
       month: date(month),
       porcentaje: porcentaje,
-  
+
     });
     showEditIngresos.show = false;
-    showAlert('Ingresos actualizados correctamente', 'success');
-    fetchTodos()
+    showAlert(alert, 'Ingresos actualizados correctamente', 'success');
+    fetchTodos(data, isLoading)
   } catch (error) {
-    showAlert('Error al actualizar los ingresos');
+    showAlert(alert, 'Error al actualizar los ingresos');
   }
 }
 //Funcion para abrir el modal
@@ -252,7 +237,7 @@ const addGastos = async () => {
     showAddGastos.data.gastos.push(gastosUpdate)
     showAddGastos.data.gastos = [...showAddGastos.data.gastos]
     const total = porcentajeGastado(showAddGastos).totalGastos
-  
+
     const { id, gastos, porcentaje } = showAddGastos.data;
     showAddGastos.show = false;
     const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
@@ -260,13 +245,12 @@ const addGastos = async () => {
       porcentaje: porcentaje,
       totalGastado: total
     })
-    fetchTodos()
-    showAlert('Gastos agregados correctamente', 'success');
-} catch (error) {
-  showAlert('Error al agregar los gastos');
+    fetchTodos(data, isLoading)
+    showAlert(alert, 'Gastos agregados correctamente', 'success');
+  } catch (error) {
+    showAlert(alert, 'Error al agregar los gastos');
+  }
 }
-}
-
 </script>
 <style scoped>
 article {
