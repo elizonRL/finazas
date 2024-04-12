@@ -1,10 +1,6 @@
 <template>
   <section>
-    <div v-if="isLoading" class="louder">
-      <Spiner class="spinner" />
-    </div>
-    <div v-else>
-
+    <div>
       <Modal :show="showAddGastos.show" @close="showAddGastos.show = flase">
         <template #header>
           <h1>Agrega tus gastos</h1>
@@ -46,20 +42,20 @@
       <div class="header_finanza">
         <h1>Agrega Tus Finanzas</h1>
       </div>
-      <Alert :message="alert.message" :show="alert.show" @close="alert.show = flase" :type="alert.type" />
-      <article>
-        <FormIngresos @submit="addIngresos" />
+      
+      <article >
+        <Spiner class="spinner"  v-if="isLoading"/>
+        <FormIngresos @submit="addIngresos" v-else/>
       </article>
+      <Alert :message="alert.message" :show="alert.show" @close="alert.show = flase" :type="alert.type" />
       <div class="card-ingresos">
         <div v-if="data.length === 0">
           <h1>No hay ingresos</h1>
         </div>
-
         <div v-else>
           <div class="ingresos-header">
             <h2>Mis ingresos</h2>
           </div>
-
           <table>
             <thead>
               <tr>
@@ -90,7 +86,6 @@
               </tr>
             </tbody>
           </table>
-
         </div>
       </div>
     </div>
@@ -132,7 +127,8 @@ const showEditIngresos = reactive({
     gastos: '',
     month: '',
     gastos: [],
-    porcentaje: 0
+    porcentaje: 0,
+    totalGastado: 0
   }
 });
 const alert = reactive({
@@ -160,7 +156,8 @@ const addIngresos = async (ingresos, month) => {
       ingreso: nuewValue,
       month: date(month),
       gastos: [],
-      porcentaje: 0
+      porcentaje: 0,
+      totalGastado: 0
     })
     data.value.push(res.data)
     showAlert(alert, 'Ingresos agregados correctamente', 'success');
@@ -179,7 +176,7 @@ const porcentajeGastado = (showAddGastos) => {
   let totalGastos = showAddGastos.data.gastos.map(gasto => gasto.monto).reduce((acc, monto) => acc + monto, 0)
 
   let porcentaje = (totalGastos * 100) / showAddGastos.data.ingreso;
-  showAddGastos.data.porcentaje = porcentaje;
+  showAddGastos.data.porcentaje = porcentaje.toFixed(2);
   return { totalGastos, porcentaje }
 }
 
@@ -196,9 +193,8 @@ const removeIngresos = async (id) => {
 }
 //Funcion para editar los ingresos
 const editIngresos = async (datas) => {
-
-  showEditIngresos.show = true;
   showEditIngresos.data = { ...datas }
+  showEditIngresos.show = true;
 }
 //Funcion para actualizar los ingresos
 const updateIngresos = async () => {
@@ -209,7 +205,6 @@ const updateIngresos = async () => {
       ingreso: ingreso,
       month: date(month),
       porcentaje: porcentaje,
-
     });
     showEditIngresos.show = false;
     showAlert(alert, 'Ingresos actualizados correctamente', 'success');
@@ -220,9 +215,11 @@ const updateIngresos = async () => {
 }
 //Funcion para abrir el modal
 const openModal = (datas) => {
+  showAddGastos.data = { ...datas };
+  if (showAddGastos.data.porcentaje == 100){
+    return showAlert(alert, 'Ya has gastado mas del 100% de tus ingresos', 'warning');
+  } 
   showAddGastos.show = true;
-  showAddGastos.data = { ...datas }
-
 }
 //Funcion para agregar los gastos
 
@@ -435,11 +432,13 @@ samp {
   left: 0;
   z-index: 1000;
 }
+
 @media (prefers-color-scheme: dark) {
   .card-ingresos {
     background: var(--navbar-color);
     color: var(--text-color);
   }
+
   article {
     background: var(--navbar-color);
     color: var(--text-color);

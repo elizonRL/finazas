@@ -184,4 +184,10 @@ span {
   align-items: start;
   padding: 10px;
 }
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: var(--navbar-color);
+    color: #fff;
+  }
+}
 </style>
