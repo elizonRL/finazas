@@ -57,4 +57,19 @@ a {
     text-decoration: none;
     color: #333;
 }
+@media (prefers-color-scheme: dark) {
+    header {
+        background: var(--navbar-color);
+        color: white;
+    }
+    a {
+        color: var(--text-color);
+    }
+    nav ul li a {
+        color: var(--text-color);
+    }
+    nav ul li a:hover {
+        color: var(--accent-color);
+    }
+}
 </style>

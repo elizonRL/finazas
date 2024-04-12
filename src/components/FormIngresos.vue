@@ -87,4 +87,9 @@ button {
 button:hover {
   background-color: var(--accent-color);
 }
+@media (prefers-color-scheme: dark) {
+  button {
+    background-color: var(--accent-color);
+  }
+}
 </style>

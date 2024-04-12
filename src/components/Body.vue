@@ -435,4 +435,14 @@ samp {
   left: 0;
   z-index: 1000;
 }
+@media (prefers-color-scheme: dark) {
+  .card-ingresos {
+    background: var(--navbar-color);
+    color: var(--text-color);
+  }
+  article {
+    background: var(--navbar-color);
+    color: var(--text-color);
+  }
+}
 </style>

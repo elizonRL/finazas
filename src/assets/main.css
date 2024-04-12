@@ -1,14 +1,15 @@
 @import "./base.css";
 @import "./normalizer.css";
-@import url('https://fonts.googleapis.com/css2?family=Imbue:opsz,wght@10..100,100..900&family=Rubik+Scribble&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Imbue:opsz,wght@10..100,100..900&family=Rubik+Scribble&display=swap");
 :root {
-  --backgroung-color: #23272E;
+  color-scheme: dark light;
+  --backgroung-color: #23272e;
   --text-color: #fff;
-  --navbar-color: #15181C;
-  --accent-color: #41B883;
-  --danger-color: #E06C75;
-  --warning-color:#E5c07b;
-  --info-color: #61AFEF;
+  --navbar-color: #15181c;
+  --accent-color: #41b883;
+  --danger-color: #e06c75;
+  --warning-color: #e5c07b;
+  --info-color: #61afef;
   --secondary-color: grey;
 }
 #app {
@@ -24,4 +25,11 @@ body {
   line-height: 1.5;
   color: var(--color-quaternary);
   background-color: whitesmoke;
+
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
 }
