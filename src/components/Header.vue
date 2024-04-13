@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import Moneybag from './icons/Moneybag.vue';
+import HomeIcon from './icons/HomeIcon.vue';
+import IngresoIcon from './icons/IngresoIcon.vue';
+import AboutIcon from './icons/AboutIcon.vue';
 const login = ref(false);
 </script>
 <template>
@@ -18,9 +21,9 @@ const login = ref(false);
                     <li><RouterLink to="/register">Register</RouterLink></li>
                 </div>
                 <div v-else>
-                <li><RouterLink to="/">Home</RouterLink></li>
-                <li><RouterLink to="/ingresos">Ingresos</RouterLink></li>
-                <li><RouterLink to="/about">About</RouterLink></li>
+                <li><RouterLink to="/"><HomeIcon/> Home</RouterLink></li>
+                <li><RouterLink to="/ingresos"><IngresoIcon/> Ingresos</RouterLink></li>
+                <li><RouterLink to="/about"><AboutIcon/> About</RouterLink></li>
                 </div>
             </ul>
         </nav>

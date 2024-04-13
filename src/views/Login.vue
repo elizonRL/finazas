@@ -3,7 +3,7 @@
         <h1>inicia secsion</h1>
     </article>
     <div>
-        <h2>Log in</h2>
+        <h2><UserIcoon/> Log in</h2>
         <form @submit.prevent="login">
             <input type="text" v-model="username" placeholder="Username" required>
             <input type="password" v-model="password" placeholder="Password" required>
@@ -14,12 +14,13 @@
                 </span>
             </button>
         </form>
-        <RouterLink to="/register">Registrate</RouterLink>
+        <RouterLink to="/singup">Registrate</RouterLink>
     </div>
 </template>
 <script setup>
 import { ref } from 'vue';
 import Spinner from '../components/Spiner.vue';
+import UserIcoon from '@/components/icons/UserIcoon.vue';
 
 const username = ref('');
 const password = ref('');
@@ -42,7 +43,7 @@ div {
     margin: auto;
     height: 50vh;
     width: 850px;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
 }
 form {
     display: flex;
@@ -84,13 +85,13 @@ h2 {
     font-weight: 700;
     margin: 20;
     padding: 1rem;
-    color: white;
+    color: #333;
     text-align: center;
     border-radius: 10px;
 }
 a {
     font-size: 20px;
-    color: var(--text-color);
+    color: #555;
     text-decoration: none;
     margin:  10px  ;
 }
@@ -107,6 +108,12 @@ a {
     }
     button:hover {
         background: #555;
+    }
+    h2{
+        color: white;
+    }
+    a{
+        color: white;
     }
 }
 </style>
