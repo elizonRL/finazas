@@ -1,5 +1,6 @@
 <template>
-  <section>
+  <Spiner class="spinner"  v-if="isLoading"/>
+  <section v-else>
     <div>
       <Modal :show="showAddGastos.show" @close="showAddGastos.show = flase">
         <template #header>
@@ -42,10 +43,8 @@
       <div class="header_finanza">
         <h1>Agrega Tus Finanzas</h1>
       </div>
-      
       <article >
-        <Spiner class="spinner"  v-if="isLoading"/>
-        <FormIngresos @submit="addIngresos" v-else/>
+        <FormIngresos @submit="addIngresos" />
       </article>
       <Alert :message="alert.message" :show="alert.show" @close="alert.show = flase" :type="alert.type" />
       <div class="card-ingresos">

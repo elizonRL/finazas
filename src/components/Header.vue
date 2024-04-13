@@ -1,5 +1,7 @@
 <script setup>
+import { ref } from 'vue';
 import Moneybag from './icons/Moneybag.vue';
+const login = ref(false);
 </script>
 <template>
     <header>
@@ -11,9 +13,15 @@ import Moneybag from './icons/Moneybag.vue';
         </RouterLink>
         <nav>
             <ul>
+                <div v-if="login">
+                    <li><RouterLink to="/login">Login</RouterLink></li>
+                    <li><RouterLink to="/register">Register</RouterLink></li>
+                </div>
+                <div v-else>
                 <li><RouterLink to="/">Home</RouterLink></li>
                 <li><RouterLink to="/ingresos">Ingresos</RouterLink></li>
                 <li><RouterLink to="/about">About</RouterLink></li>
+                </div>
             </ul>
         </nav>
     </header>
