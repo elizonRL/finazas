@@ -3,7 +3,9 @@
         <h1>inicia secsion</h1>
     </article>
     <div>
-        <h2><UserIcoon/> Log in</h2>
+        <h2>
+            <UserIcoon /> Log in
+        </h2>
         <form @submit.prevent="login">
             <input type="text" v-model="username" placeholder="Username" required>
             <input type="password" v-model="password" placeholder="Password" required>
@@ -43,20 +45,23 @@ div {
     margin: auto;
     height: 50vh;
     width: 850px;
-    /* border: 1px solid #ccc; */
+    
 }
+
 form {
     display: flex;
     flex-direction: column;
     width: 50%;
     gap: 1rem;
 }
+
 input {
-    padding: 0.5rem;
+    padding: 1rem;
     font-size: 1rem;
     border: 1px solid var(--accent-color);
     border-radius: 5px;
 }
+
 button {
     padding: 0.5rem;
     font-size: 1rem;
@@ -67,9 +72,11 @@ button {
     color: white;
     cursor: pointer;
 }
+
 button:hover {
     background: var(--accent-color);
 }
+
 h1 {
     font-size: 44px;
     font-weight: 700;
@@ -80,6 +87,7 @@ h1 {
     text-align: center;
     border-radius: 10px;
 }
+
 h2 {
     font-size: 24px;
     font-weight: 700;
@@ -89,30 +97,34 @@ h2 {
     text-align: center;
     border-radius: 10px;
 }
+
 a {
     font-size: 20px;
     color: #555;
     text-decoration: none;
-    margin:  10px  ;
+    margin: 10px;
 }
+
 @media (prefers-color-scheme: dark) {
-    div {
-        border: 1px solid #333;
-    }
+
     input {
         background: #333;
         color: white;
     }
+
     button {
         background: var(--accent-color);
     }
+
     button:hover {
         background: #555;
     }
-    h2{
+
+    h2 {
         color: white;
     }
-    a{
+
+    a {
         color: white;
     }
 }

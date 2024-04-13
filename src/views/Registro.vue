@@ -1,14 +1,19 @@
 <template>
     <article>
-            <h1><UsersIcon/> Registro de Usuarios</h1>
-            <form>
-                <input type="text" v-model="username" placeholder="username">
-                <input type="password" v-model="password" placeholder="password">
-                <button @click="register">Register</button>
-            </form>
-            <small>Si ya estas Registrado inica secsion</small>
-            <RouterLink to="/login">Log in</RouterLink>
+        <h1>Registrate como usuario</h1>
     </article>
+    <section>
+        <h2>
+            <UsersIcon /> Registro de Usuarios
+        </h2>
+        <form>
+            <input type="text" v-model="username" placeholder="username">
+            <input type="password" v-model="password" placeholder="password">
+            <button @click="register">Register</button>
+        </form>
+        <small>Si ya estas Registrado inica secsion</small>
+        <RouterLink to="/login">Log in</RouterLink>
+    </section>
 </template>
 <script setup>
 import UsersIcon from '@/components/icons/UsersIcon.vue';
@@ -21,8 +26,7 @@ const register = () => {
 }
 </script>
 <style scoped>
-
-article {
+section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,7 +34,16 @@ article {
     margin: auto;
     height: 50vh;
     width: 850px;
-   border: 1px solid #ccc; 
+}
+h1 {
+    font-size: 44px;
+    font-weight: 700;
+    margin: 10;
+    padding: 1rem;
+    background: var(--accent-color);
+    color: white;
+    text-align: center;
+    border-radius: 10px;
 }
 
 form {
@@ -53,15 +66,34 @@ button {
     border: none;
     align-items: center;
     border-radius: 5px;
+    color: white;
+    background: var(--secondary-color);
 }
+button:hover {
+    background: var(--accent-color);
+}
+
 a {
     font-size: 22px;
     margin: 10px;
     color: var(--accent-color);
     text-decoration: none;
 }
+
 small {
     font-size: 14px;
     margin: 10px;
+}
+@media (prefers-color-scheme: dark) {
+    h1 {
+        background: var(--accent-color);
+        color: white;
+    }
+    button {
+        background: var(--accent-color);
+    }
+    button:hover {
+        background: var(--secondary-color);
+    }
 }
 </style>
