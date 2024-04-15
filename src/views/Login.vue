@@ -1,10 +1,9 @@
 <template>
     <article>
         <h1>inicia secsion</h1>
+        <Alert :message="alert.message" :show="alert.show" :type="alert.type" @close="alert.show = false" />
     </article>
     <div>
-        <Alert :message="alert.message" :show="alert.show" :type="alert.type" @close="alert.show = false" />
-
         <h2>
             <UserIcoon /> Log in
         </h2>
@@ -45,13 +44,14 @@ const login = async () => {
     try {
         loading.value = true;
         const res = await axios.get(`http://localhost:8080/users?username=${username.value}&password=${password.value}`);
-
         if (res.data.length === 0) {
             showAlert(alert, 'Usuario o contraseña incorrectos');
             loading.value = false;
         } else {
-
-            localStorage.setItem('user', JSON.stringify(res.data[0].username));
+            localStorage.setItem('user', JSON.stringify({
+                id: res.data[0].id,
+                username: res.data[0].username
+            }));
             location.push('/');
             loading.value = false;
         }
@@ -71,7 +71,6 @@ div {
     margin: auto;
     height: 50vh;
     width: 850px;
-
 }
 
 form {

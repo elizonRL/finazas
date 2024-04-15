@@ -136,6 +136,7 @@ const alert = reactive({
   type: "danger",
 });
 
+
 /* Funciones
 Funcion para traer los datos de la base de dato
 Llamamos la funcion para traer los datos */
@@ -144,6 +145,7 @@ fetchTodos(data, isLoading);
 const addIngresos = async (ingresos, month) => {
   try {
     //Validamos que los campos no esten vacios
+    let userId = JSON.parse(localStorage.getItem('user')).id;
     let nuewValue = parseFloat(ingresos);
     let namComprobation = isNaN(nuewValue);
     //Validamos que los campos no esten vacios
@@ -152,6 +154,7 @@ const addIngresos = async (ingresos, month) => {
 
     //Hacemos la peticion a la base de datos
     const res = await axios.post('http://localhost:8080/finanzas', {
+      userId: userId,
       ingreso: nuewValue,
       month: date(month),
       gastos: [],

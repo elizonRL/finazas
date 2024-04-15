@@ -22,7 +22,9 @@ import UsersIcon from '@/components/icons/UsersIcon.vue';
 import { reactive, ref } from 'vue';
 import { showAlert } from '@/components/composable/httpsMethod';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
+const location = useRouter();
 const username = ref('')
 const password = ref('')
 const alert = reactive({
@@ -32,7 +34,7 @@ const alert = reactive({
 });
 const register = async () => {
     if (username.value === '' || password.value === '') {
-        showAlert(alert, 'Todos los campos son obligatorios')
+        return showAlert(alert, 'Todos los campos son obligatorios')
     }
     await axios.post('http://localhost:8080/users', {
         username: username.value,
@@ -41,6 +43,10 @@ const register = async () => {
     showAlert(alert, 'Usuario registrado correctamente', 'success');
     username.value = '';
     password.value = '';
+    setTimeout(() => {
+        location.push('/login')
+    }, 2000);
+
 }
 </script>
 <style scoped>
@@ -52,6 +58,7 @@ section {
     margin: auto;
     height: 50vh;
     width: 850px;
+    padding-top: 15px;
 }
 
 h1 {
