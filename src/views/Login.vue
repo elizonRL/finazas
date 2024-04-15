@@ -3,6 +3,8 @@
         <h1>inicia secsion</h1>
     </article>
     <div>
+        <Alert :message="alert.message" :show="alert.show" :type="alert.type" @close="alert.show = false" />
+
         <h2>
             <UserIcoon /> Log in
         </h2>
@@ -20,20 +22,44 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import Spinner from '../components/Spiner.vue';
 import UserIcoon from '@/components/icons/UserIcoon.vue';
+import axios from 'axios';
+import { showAlert } from '@/components/composable/httpsMethod';
+import Alert from '@/components/Alert.vue';
+
 
 const username = ref('');
 const password = ref('');
+const location = useRouter();
 const loading = ref(false);
+const alert = reactive({
+    show: false,
+    message: '',
+    type: 'danger'
+});
 
-const login = () => {
-    loading.value = true;
-    console.log(username.value, password.value);
-    username.value = '';
-    password.value = '';
-    loading.value = false;
+const login = async () => {
+    try {
+        loading.value = true;
+        const res = await axios.get(`http://localhost:8080/users?username=${username.value}&password=${password.value}`);
+
+        if (res.data.length === 0) {
+            showAlert(alert, 'Usuario o contraseña incorrectos');
+            loading.value = false;
+        } else {
+
+            localStorage.setItem('user', JSON.stringify(res.data[0].username));
+            location.push('/');
+            loading.value = false;
+        }
+        console.log(res.data);
+    } catch (error) {
+        loading.value = false;
+        showAlert(alert, 'Error al iniciar sesion');
+    }
 }
 </script>
 <style scoped>
@@ -45,7 +71,7 @@ div {
     margin: auto;
     height: 50vh;
     width: 850px;
-    
+
 }
 
 form {
