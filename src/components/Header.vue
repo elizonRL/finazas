@@ -59,14 +59,10 @@ let user = ref(localStorage.getItem('user'));
 if (user.value) {
   login.value = true;
 }
-
-
-
 const logout = () => {
   localStorage.removeItem('user');
   login.value = false;
 }
-
 </script>
 <style scoped>
 header {
