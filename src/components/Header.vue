@@ -45,7 +45,7 @@
   </header>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Moneybag from './icons/Moneybag.vue';
 import HomeIcon from './icons/HomeIcon.vue';
 import IngresoIcon from './icons/IngresoIcon.vue';
@@ -54,15 +54,12 @@ import LogoutIcon from './icons/LogoutIcon.vue';
 import LoginIcon from './LoginIcon.vue';
 const login = ref(false);
 
-let user = ref(localStorage.getItem('user'));
 
-if (user.value) {
-  login.value = true;
-}
 const logout = () => {
   localStorage.removeItem('user');
   login.value = false;
 }
+
 </script>
 <style scoped>
 header {
