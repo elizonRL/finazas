@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const fetchTodos = async (data, isLoading) => {
+const fetchTodos = async (data, isLoading, userId) => {
     try {
       isLoading.value = true;
-      const res = await axios.get('http://localhost:8080/finanzas')
+      const res = await axios.get(`http://localhost:8080/finanzas?userId=${userId}`)
       data.value = res.data
     } catch (error) {
       showAlert('Error al traer los datos de la base de datos');

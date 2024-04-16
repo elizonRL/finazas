@@ -135,17 +135,17 @@ const alert = reactive({
   message: "",
   type: "danger",
 });
-
+const userId = JSON.parse(localStorage.getItem('user')).id;
 
 /* Funciones
 Funcion para traer los datos de la base de dato
 Llamamos la funcion para traer los datos */
-fetchTodos(data, isLoading);
+fetchTodos(data, isLoading, userId);
 //Funcion para agregar los ingresos
 const addIngresos = async (ingresos, month) => {
   try {
     //Validamos que los campos no esten vacios
-    let userId = JSON.parse(localStorage.getItem('user')).id;
+    
     let nuewValue = parseFloat(ingresos);
     let namComprobation = isNaN(nuewValue);
     //Validamos que los campos no esten vacios
@@ -186,7 +186,7 @@ const porcentajeGastado = (showAddGastos) => {
 const removeIngresos = async (id) => {
   try {
     const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
-    fetchTodos(data, isLoading)
+    fetchTodos(data, isLoading, userId)
     showAlert(alert, 'Ingresos eliminados correctamente', 'success');
   } catch (error) {
     showAlert(alert, 'Error al eliminar los ingresos');
@@ -210,7 +210,7 @@ const updateIngresos = async () => {
     });
     showEditIngresos.show = false;
     showAlert(alert, 'Ingresos actualizados correctamente', 'success');
-    fetchTodos(data, isLoading)
+    fetchTodos(data, isLoading, userId)
   } catch (error) {
     showAlert(alert, 'Error al actualizar los ingresos');
   }
