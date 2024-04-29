@@ -66,7 +66,7 @@ const login = async () => {
             username: username.value,
             password: password.value
         });
-        if(res.data.length === 0){
+        if(res.status === 401){
             showAlert(alert, 'Usuario o contraseña incorrectos');
             loading.value = false;
         }else{
