@@ -1,5 +1,5 @@
 <template>
-  <Spiner class="spinner"  v-if="isLoading"/>
+  <Spiner class="spinner" v-if="isLoading" />
   <section v-else>
     <div>
       <Modal :show="showAddGastos.show" @close="showAddGastos.show = flase">
@@ -43,7 +43,7 @@
       <div class="header_finanza">
         <h1>Agrega Tus Finanzas</h1>
       </div>
-      <article >
+      <article>
         <FormIngresos @submit="addIngresos" />
       </article>
       <Alert :message="alert.message" :show="alert.show" @close="alert.show = flase" :type="alert.type" />
@@ -145,7 +145,7 @@ fetchTodos(data, isLoading, userId);
 const addIngresos = async (ingresos, month) => {
   try {
     //Validamos que los campos no esten vacios
-    
+
     let nuewValue = parseFloat(ingresos);
     let namComprobation = isNaN(nuewValue);
     //Validamos que los campos no esten vacios
@@ -218,9 +218,9 @@ const updateIngresos = async () => {
 //Funcion para abrir el modal
 const openModal = (datas) => {
   showAddGastos.data = { ...datas };
-  if (showAddGastos.data.porcentaje == 100){
+  if (showAddGastos.data.porcentaje == 100) {
     return showAlert(alert, 'Ya has gastado mas del 100% de tus ingresos', 'warning');
-  } 
+  }
   showAddGastos.show = true;
 }
 //Funcion para agregar los gastos
@@ -244,7 +244,7 @@ const addGastos = async () => {
       porcentaje: porcentaje,
       totalGastado: total
     })
-    fetchTodos(data, isLoading)
+    fetchTodos(data, isLoading, userId)
     showAlert(alert, 'Gastos agregados correctamente', 'success');
   } catch (error) {
     showAlert(alert, 'Error al agregar los gastos');

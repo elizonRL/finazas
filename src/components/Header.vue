@@ -54,6 +54,9 @@ import LogoutIcon from './icons/LogoutIcon.vue';
 import LoginIcon from './LoginIcon.vue';
 const login = ref(false);
 
+if(localStorage.getItem('user')) {
+  login.value = true;
+}
 
 const logout = () => {
   localStorage.removeItem('user');
