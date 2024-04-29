@@ -113,7 +113,7 @@ const showAddGastos = reactive({
   show: false,
   data: {
     id: '',
-    gastos: '',
+    ingreso: '',
     month: '',
     gastos: [],
     porcentaje: 0
@@ -123,7 +123,7 @@ const showEditIngresos = reactive({
   show: false,
   data: {
     id: '',
-    gastos: '',
+    ingreso: '',
     month: '',
     gastos: [],
     porcentaje: 0,
@@ -135,12 +135,13 @@ const alert = reactive({
   message: "",
   type: "danger",
 });
-const userId = JSON.parse(localStorage.getItem('user')).id;
+const userId = 2;
 
 /* Funciones
 Funcion para traer los datos de la base de dato
 Llamamos la funcion para traer los datos */
-fetchTodos(data, isLoading, userId);
+fetchTodos(data, isLoading);
+
 //Funcion para agregar los ingresos
 const addIngresos = async (ingresos, month) => {
   try {

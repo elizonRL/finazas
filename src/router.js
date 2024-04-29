@@ -32,7 +32,7 @@ const routes = [
 const beforeEach = (to, from, next) => {
   const publicPages = ["/login", "/singup"];
   const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem("user");
+  const loggedIn = localStorage.getItem("token");
 
   if (authRequired && !loggedIn) {
     return next("/login");

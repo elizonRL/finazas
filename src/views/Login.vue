@@ -41,45 +41,22 @@ const alert = reactive({
 });
 
 const login = async () => {
-    /*try {
-        loading.value = true;
-        const res = await axios.get(`http://localhost:8080/users?username=${username.value}&password=${password.value}`);
-        if (res.data.length === 0) {
-            showAlert(alert, 'Usuario o contraseña incorrectos');
-            loading.value = false;
-        } else {
-            localStorage.setItem('user', JSON.stringify({
-                id: res.data[0].id,
-                username: res.data[0].username
-            }));
-            location.push('/');
-            loading.value = false;
-        }
-        console.log(res.data);
-    } catch (error) {
-        loading.value = false;
-        showAlert(alert, 'Error al iniciar sesion');
-    }*/
-    try{
+
+    try {
         loading.value = true;
         const res = await axios.post('http://localhost:3000/auth/login', {
             username: username.value,
             password: password.value
         });
-        if(res.status === 401){
-            showAlert(alert, 'Usuario o contraseña incorrectos');
-            loading.value = false;
-        }else{
-           /*  localStorage.setItem('user', JSON.stringify({
-                id: res.data[0].id,
-                username: res.data[0].username
-            })); 
-            location.push('/'); */
-            loading.value = false;
-            console.log(res.data.token);
-        }
-    }catch(error){
-        console.log(error);
+        loading.value = false;
+
+        localStorage.setItem('token', res.data.token);
+        location.push('/');
+        loading.value = false;
+
+    } catch (error) {
+        showAlert(alert, error.response.data.message);
+        loading.value = false;
     }
 }
 </script>
