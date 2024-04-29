@@ -41,7 +41,7 @@ const alert = reactive({
 });
 
 const login = async () => {
-    try {
+    /*try {
         loading.value = true;
         const res = await axios.get(`http://localhost:8080/users?username=${username.value}&password=${password.value}`);
         if (res.data.length === 0) {
@@ -59,6 +59,27 @@ const login = async () => {
     } catch (error) {
         loading.value = false;
         showAlert(alert, 'Error al iniciar sesion');
+    }*/
+    try{
+        loading.value = true;
+        const res = await axios.post('http://localhost:3000/auth/login', {
+            username: username.value,
+            password: password.value
+        });
+        if(res.data.length === 0){
+            showAlert(alert, 'Usuario o contraseña incorrectos');
+            loading.value = false;
+        }else{
+           /*  localStorage.setItem('user', JSON.stringify({
+                id: res.data[0].id,
+                username: res.data[0].username
+            })); 
+            location.push('/'); */
+            loading.value = false;
+            console.log(res.data.token);
+        }
+    }catch(error){
+        console.log(error);
     }
 }
 </script>
