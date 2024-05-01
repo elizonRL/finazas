@@ -160,14 +160,15 @@ const addIngresos = async (ingresos, month) => {
     }, 
     {
       headers: {
-          Authorization: `jwt ${localStorage.getItem('token')}`
-        },
+        Authorization: `jwt ${localStorage.getItem('token')}`
+      },
     }
+    
   )
     //Llamamos la funcion para traer los datos
     fetchTodos(data, isLoading)
     //Mostramos una alerta
-    showAlert(alert, res.data.message, 'success');
+    showAlert(alert, "data save successfully", 'success');
   } catch (error) {
     showAlert(alert, 'Error al agregar los ingresos');
   }
@@ -190,7 +191,7 @@ const porcentajeGastado = (showAddGastos) => {
 //Funcion para eliminar los ingresos
 const removeIngresos = async (id) => {
   try {
-    console.log(id)
+    
     const res = await axios.delete(`http://localhost:3000/finanzas/${id}`, {
       headers: {
           Authorization: `jwt ${localStorage.getItem('token')}`

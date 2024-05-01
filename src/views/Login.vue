@@ -53,7 +53,6 @@ const login = async () => {
         localStorage.setItem('token', res.data.token);
         location.push('/');
         loading.value = false;
-
     } catch (error) {
         showAlert(alert, error.response.data.message);
         loading.value = false;
@@ -70,21 +69,18 @@ div {
     height: 50vh;
     width: 850px;
 }
-
 form {
     display: flex;
     flex-direction: column;
     width: 50%;
     gap: 1rem;
 }
-
 input {
     padding: 1rem;
     font-size: 1rem;
     border: 1px solid var(--accent-color);
     border-radius: 5px;
 }
-
 button {
     padding: 0.5rem;
     font-size: 1rem;
@@ -95,7 +91,6 @@ button {
     color: white;
     cursor: pointer;
 }
-
 button:hover {
     background: var(--accent-color);
 }
