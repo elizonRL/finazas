@@ -66,7 +66,7 @@
                 <th>Agregar gastos</th>
               </tr>
             </thead>
-            <tbody v-for="datas in data" :key="datas.id">
+            <tbody v-for="datas in data" :key="datas.finanzaId">
               <tr>
                 <td>{{ datas.month }}</td>
                 <td>$ {{ datas.ingreso }}</td>
@@ -77,7 +77,7 @@
                   <Pencil @click="editIngresos(datas)" />
                 </td>
                 <td>
-                  <Trash @click="removeIngresos(datas.id)" />
+                  <Trash @click="removeIngresos(datas.finanzaId)" />
                 </td>
                 <td>
                   <Plus @click="openModal(datas)" />
@@ -154,16 +154,20 @@ const addIngresos = async (ingresos, month) => {
     if (namComprobation) return showAlert(alert, 'Este campo solo acepta numeros')
 
     //Hacemos la peticion a la base de datos
-    const res = await axios.post('http://localhost:8080/finanzas', {
-      userId: userId,
+    const res = await axios.post('http://localhost:3000/finanzas', {
       ingreso: nuewValue,
-      month: date(month),
-      gastos: [],
-      porcentaje: 0,
-      totalGastado: 0
-    })
-    data.value.push(res.data)
-    showAlert(alert, 'Ingresos agregados correctamente', 'success');
+      month: date(month)
+    }, 
+    {
+      headers: {
+          Authorization: `jwt ${localStorage.getItem('token')}`
+        },
+    }
+  )
+    //Llamamos la funcion para traer los datos
+    fetchTodos(data, isLoading)
+    //Mostramos una alerta
+    showAlert(alert, res.data.message, 'success');
   } catch (error) {
     showAlert(alert, 'Error al agregar los ingresos');
   }
@@ -186,8 +190,13 @@ const porcentajeGastado = (showAddGastos) => {
 //Funcion para eliminar los ingresos
 const removeIngresos = async (id) => {
   try {
-    const res = await axios.delete(`http://localhost:8080/finanzas/${id}`)
-    fetchTodos(data, isLoading, userId)
+    console.log(id)
+    const res = await axios.delete(`http://localhost:3000/finanzas/${id}`, {
+      headers: {
+          Authorization: `jwt ${localStorage.getItem('token')}`
+        },
+    });
+    fetchTodos(data, isLoading)
     showAlert(alert, 'Ingresos eliminados correctamente', 'success');
   } catch (error) {
     showAlert(alert, 'Error al eliminar los ingresos');
@@ -211,7 +220,7 @@ const updateIngresos = async () => {
     });
     showEditIngresos.show = false;
     showAlert(alert, 'Ingresos actualizados correctamente', 'success');
-    fetchTodos(data, isLoading, userId)
+    fetchTodos(data, isLoading)
   } catch (error) {
     showAlert(alert, 'Error al actualizar los ingresos');
   }
@@ -245,7 +254,7 @@ const addGastos = async () => {
       porcentaje: porcentaje,
       totalGastado: total
     })
-    fetchTodos(data, isLoading, userId)
+    fetchTodos(data, isLoading)
     showAlert(alert, 'Gastos agregados correctamente', 'success');
   } catch (error) {
     showAlert(alert, 'Error al agregar los gastos');

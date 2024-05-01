@@ -54,12 +54,12 @@ import LogoutIcon from './icons/LogoutIcon.vue';
 import LoginIcon from './LoginIcon.vue';
 const login = ref(false);
 
-if(localStorage.getItem('user')) {
+if(localStorage.getItem('token')) {
   login.value = true;
 }
 
 const logout = () => {
-  localStorage.removeItem('user');
+  localStorage.removeItem('token');
   login.value = false;
 }
 
