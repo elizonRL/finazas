@@ -18,14 +18,14 @@
       </template>
     </Modal>
     <h1>Ingresos</h1>
-    <div v-if="ingresos.length == 0">
+    <div v-if="data.length == 0">
       <Span>No tiene ingresos registrados regitra uno </Span>
     </div>
     <div v-else>
       <Span>Detalle de los ingresos Mensuales</Span>
       <p>Estos son tu ingresos mensuales registrados</p>
       <div class="grilla">
-        <div class="card" v-for="datas in ingresos" :key="datas.id">
+        <div class="card" v-for="datas in data" :key="datas.finanzaId">
           <div class="btn-grup">
             <Plus/>
             <Trash @click="deleteIngreso(datas.id)" />
@@ -64,9 +64,11 @@ import Plus from '@/components/icons/Plus.vue';
 import Trash from '@/components/icons/Trash.vue';
 import Pencil from '@/components/icons/Pencil.vue';
 import Modal from '@/components/Modal.vue';
+import { fetchTodos } from '@/components/composable/httpsMethod';
 
 const url = ref(import.meta.env.VITE_URL);
-const ingresos = ref([]);
+const isLoding = ref(false);
+const data = ref([]);
 const showEditIngreso = reactive({
   show: false,
   data:
@@ -82,16 +84,13 @@ const showEditIngreso = reactive({
 
 //Funciones
 //Obtener los ingresos
-const getIngresos = async () => {
-  const res = await axios.get('http://localhost:8080/finanzas');
- console.log(url);
-  ingresos.value = res.data;
-}
-getIngresos();
+fetchTodos(data, isLoding);
+console.log(data);
+
 //Eliminar un ingreso
 const deleteIngreso = async (id) => {
   await axios.delete(`http://localhost:8080/finanzas/${id}`);
-  getIngresos();
+  fetchTodos(ingresos, isLoding);
 }
 const editIngreso = async (data) => {
   showEditIngreso.show = true;

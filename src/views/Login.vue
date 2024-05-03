@@ -55,6 +55,7 @@ const login = async () => {
         loading.value = false;
     } catch (error) {
         showAlert(alert, error.response.data.message);
+        console.log(error.response.data.message);
         loading.value = false;
     }
 }

@@ -1,18 +1,24 @@
 import axios from "axios";
+import { reactive } from "vue";
 
+const alert = reactive({
+  show: false,
+  message: "",
+  type: "danger",
+});
 
-const fetchTodos = async (data, isLoading,) => {
+const fetchTodos = async (data, isLoading) => {
     try {
       isLoading.value = true;
-      /* const res = await axios.get(`http://localhost:8080/finanzas?userId=${userId}`) */
-      const res = await axios.get("http://localhost:3000/finanzas",{
+      const res = await axios.get("http://localhost:3000/finanzas", {
         headers: {
           Authorization: `jwt ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
         },
-      })
+      });
       data.value = res.data.finanzas.finazas;
     } catch (error) {
-      showAlert('Error al traer los datos de la base de datos');
+      showAlert( alert, 'Error al traer los datos de la base de datos');
     }
     isLoading.value = false;
   }
