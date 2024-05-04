@@ -26,7 +26,7 @@ import { useRouter } from 'vue-router';
 import Spinner from '../components/Spiner.vue';
 import UserIcoon from '@/components/icons/UserIcoon.vue';
 import axios from 'axios';
-import { showAlert } from '@/components/composable/httpsMethod';
+import { checkLogin, showAlert } from '@/components/composable/httpsMethod';
 import Alert from '@/components/Alert.vue';
 
 
@@ -52,6 +52,7 @@ const login = async () => {
 
         localStorage.setItem('token', res.data.token);
         location.push('/');
+        checkLogin(true);
         loading.value = false;
     } catch (error) {
         showAlert(alert, error.response.data.message);

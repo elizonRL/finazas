@@ -8,7 +8,7 @@
     </RouterLink>
     <nav>
       <ul>
-        <div v-if="!login">
+        <div v-if="!checkLogin">
           <li>
             <RouterLink to="/login">
               <LoginIcon /> Log in
@@ -45,19 +45,21 @@
   </header>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Moneybag from './icons/Moneybag.vue';
 import HomeIcon from './icons/HomeIcon.vue';
 import IngresoIcon from './icons/IngresoIcon.vue';
 import AboutIcon from './icons/AboutIcon.vue';
 import LogoutIcon from './icons/LogoutIcon.vue';
 import LoginIcon from './LoginIcon.vue';
+import { loginC } from './composable/httpsMethod';
 const login = ref(false);
 
-if(localStorage.getItem('token')) {
-  login.value = true;
+const checkLogin = computed(() =>{
+ if (localStorage.getItem('token')|| loginC.value) {
+  return true;
 }
-
+});
 const logout = () => {
   localStorage.removeItem('token');
   login.value = false;

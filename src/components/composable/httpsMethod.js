@@ -1,11 +1,12 @@
 import axios from "axios";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 
 const alert = reactive({
   show: false,
   message: "",
   type: "danger",
 });
+ const loginC = ref(false);
 
 const fetchTodos = async (data, isLoading) => {
     try {
@@ -27,4 +28,10 @@ const fetchTodos = async (data, isLoading) => {
     alert.message = message;
     alert.type = type;
   }
-  export { fetchTodos, showAlert}
+  const checkLogin =  (isLogin) => {
+    if (!isLogin ) {
+      return loginC.value = false;
+    }
+    return loginC.value = true;
+  }
+  export { fetchTodos, showAlert, checkLogin, loginC}

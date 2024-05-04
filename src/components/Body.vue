@@ -248,13 +248,18 @@ const addGastos = async () => {
     showAddGastos.data.gastos = [...showAddGastos.data.gastos]
     const total = porcentajeGastado(showAddGastos).totalGastos
 
-    const { id, gastos, porcentaje } = showAddGastos.data;
+    const { finanzaId, gastos, porcentaje } = showAddGastos.data;
     showAddGastos.show = false;
-    const res = await axios.patch(`http://localhost:8080/finanzas/${id}`, {
+    const res = await axios.patch(`http://localhost:3000/finanzas/gastos/${finanzaId}`, {
       gastos: gastos,
       porcentaje: porcentaje,
       totalGastado: total
-    })
+    }, 
+    {
+      headers: {
+        Authorization: `jwt ${localStorage.getItem('token')}`
+      },
+    }); 
     fetchTodos(data, isLoading)
     showAlert(alert, 'Gastos agregados correctamente', 'success');
   } catch (error) {
