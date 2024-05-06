@@ -34,7 +34,24 @@ const alert = reactive({
 });
 const register = async () => {
 
-    if (username.value === '' || password.value === '') {
+    try {
+        if (username.value === '' || password.value === '') {
+            return showAlert(alert, 'Todos los campos son obligatorios')
+        }
+        await axios.post('http://localhost:3000/auth/register', {
+            username: username.value,
+            password: password.value
+        });
+        showAlert(alert, 'Usuario registrado correctamente', 'success');
+        username.value = '';
+        password.value = '';
+        setTimeout(() => {
+            location.push('/login')
+        }, 2000);
+    } catch (error) {
+        showAlert(alert, 'Error al registrar el usuario', 'danger');
+    }
+    /* if (username.value === '' || password.value === '') {
         return showAlert(alert, 'Todos los campos son obligatorios')
     }
     await axios.post('http://localhost:3000/auth/register', {
@@ -46,8 +63,7 @@ const register = async () => {
     password.value = '';
     setTimeout(() => {
         location.push('/login')
-    }, 2000);
-
+    }, 2000); */
 }
 </script>
 <style scoped>
