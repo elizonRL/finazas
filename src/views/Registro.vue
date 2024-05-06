@@ -33,10 +33,11 @@ const alert = reactive({
     type: 'danger'
 });
 const register = async () => {
+
     if (username.value === '' || password.value === '') {
         return showAlert(alert, 'Todos los campos son obligatorios')
     }
-    await axios.post('http://localhost:8080/users', {
+    await axios.post('http://localhost:3000/auth/register', {
         username: username.value,
         password: password.value
     });
