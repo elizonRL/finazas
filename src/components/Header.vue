@@ -8,7 +8,7 @@
     </RouterLink>
     <nav>
       <ul>
-        <div v-if="!checkLogin">
+        <div v-if="!checkLogin || login">
           <li>
             <RouterLink to="/login">
               <LoginIcon /> Log in
@@ -56,9 +56,11 @@ import { loginC } from './composable/httpsMethod';
 const login = ref(false);
 
 const checkLogin = computed(() =>{
+  login.value = loginC.value
  if (localStorage.getItem('token')|| loginC.value) {
   return true;
 }
+
 });
 const logout = () => {
   localStorage.removeItem('token');

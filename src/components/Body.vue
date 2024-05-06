@@ -247,11 +247,13 @@ const addGastos = async () => {
     showAddGastos.data.gastos.push(gastosUpdate)
     showAddGastos.data.gastos = [...showAddGastos.data.gastos]
     const total = porcentajeGastado(showAddGastos).totalGastos
-
+    console.log(total);
     const { finanzaId, gastos, porcentaje } = showAddGastos.data;
     showAddGastos.show = false;
     const res = await axios.patch(`http://localhost:3000/finanzas/gastos/${finanzaId}`, {
-      gastos: gastos,
+      /* gastos: gastos, */
+      concepto: gastosUpdate.concepto,
+      Cantidad: gastosUpdate.monto,
       porcentaje: porcentaje,
       totalGastado: total
     }, 
