@@ -1,6 +1,6 @@
 @import "./base.css";
 @import "./normalizer.css";
-@import url("https://fonts.googleapis.com/css2?family=Imbue:opsz,wght@10..100,100..900&family=Rubik+Scribble&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
   color-scheme: dark light;
   --backgroung-color: #23272e;

@@ -191,7 +191,6 @@ const porcentajeGastado = (showAddGastos) => {
 //Funcion para eliminar los ingresos
 const removeIngresos = async (id) => {
   try {
-    
     const res = await axios.delete(`http://localhost:3000/finanzas/${id}`, {
       headers: {
           Authorization: `jwt ${localStorage.getItem('token')}`
@@ -202,7 +201,6 @@ const removeIngresos = async (id) => {
   } catch (error) {
     showAlert(alert, 'Error al eliminar los ingresos');
   }
-
 }
 //Funcion para editar los ingresos
 const editIngresos = async (datas) => {
@@ -251,9 +249,8 @@ const addGastos = async () => {
     const { finanzaId, gastos, porcentaje } = showAddGastos.data;
     showAddGastos.show = false;
     const res = await axios.patch(`http://localhost:3000/finanzas/gastos/${finanzaId}`, {
-      /* gastos: gastos, */
       concepto: gastosUpdate.concepto,
-      Cantidad: gastosUpdate.monto,
+      cantidad: gastosUpdate.monto,
       porcentaje: porcentaje,
       totalGastado: total
     }, 
