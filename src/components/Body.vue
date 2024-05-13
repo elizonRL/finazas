@@ -157,14 +157,14 @@ const addIngresos = async (ingresos, month) => {
     const res = await axios.post('http://localhost:3000/finanzas', {
       ingreso: nuewValue,
       month: date(month)
-    }, 
-    {
-      headers: {
-        Authorization: `jwt ${localStorage.getItem('token')}`
-      },
-    }
-    
-  )
+    },
+      {
+        headers: {
+          Authorization: `jwt ${localStorage.getItem('token')}`
+        },
+      }
+
+    )
     //Llamamos la funcion para traer los datos
     fetchTodos(data, isLoading)
     //Mostramos una alerta
@@ -185,6 +185,7 @@ const porcentajeGastado = (showAddGastos) => {
 
   let porcentaje = (totalGastos * 100) / showAddGastos.data.ingreso;
   showAddGastos.data.porcentaje = porcentaje.toFixed(2);
+  console.log(showAddGastos);
   return { totalGastos, porcentaje }
 }
 
@@ -193,8 +194,8 @@ const removeIngresos = async (id) => {
   try {
     const res = await axios.delete(`http://localhost:3000/finanzas/${id}`, {
       headers: {
-          Authorization: `jwt ${localStorage.getItem('token')}`
-        },
+        Authorization: `jwt ${localStorage.getItem('token')}`
+      },
     });
     fetchTodos(data, isLoading)
     showAlert(alert, 'Ingresos eliminados correctamente', 'success');
@@ -245,20 +246,20 @@ const addGastos = async () => {
     showAddGastos.data.gastos.push(gastosUpdate)
     showAddGastos.data.gastos = [...showAddGastos.data.gastos]
     const total = porcentajeGastado(showAddGastos).totalGastos
-    console.log(total);
+    console.log(typeof total);
     const { finanzaId, gastos, porcentaje } = showAddGastos.data;
     showAddGastos.show = false;
-    const res = await axios.patch(`http://localhost:3000/finanzas/gastos/${finanzaId}`, {
+   const res = await axios.patch(`http://localhost:3000/finanzas/gastos/${finanzaId}`, {
       concepto: gastosUpdate.concepto,
       cantidad: gastosUpdate.monto,
-      porcentaje: porcentaje,
+      porcentaje: parseFloat(porcentaje),
       totalGastado: total
-    }, 
-    {
-      headers: {
-        Authorization: `jwt ${localStorage.getItem('token')}`
-      },
-    }); 
+    },
+      {
+        headers: {
+          Authorization: `jwt ${localStorage.getItem('token')}`
+        },
+      });
     fetchTodos(data, isLoading)
     showAlert(alert, 'Gastos agregados correctamente', 'success');
   } catch (error) {

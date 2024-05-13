@@ -43,7 +43,7 @@
             <div class="gastos">
               <div v-for="gasto in datas.gastos">
                 <p>Concepto: {{ gasto.concepto }}</p>
-                <p>Monto: {{ gasto.monto }}</p>
+                <p>Monto: {{ gasto.cantidad }}</p>
               </div>
             </div>
           </div>
